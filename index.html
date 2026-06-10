@@ -1,257 +1,186 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Go Snuggiez 🐱</title>
-
-    <style>
-
-        body{
-
-            margin:0;
-
-            padding:20px;
-
-            background:#11284a;
-
-            color:white;
-
-            font-family:Arial, Helvetica, sans-serif;
-
-            max-width:900px;
-
-            margin:auto;
-
-        }
-
-        h1,h2,h3{
-
-            text-align:center;
-
-        }
-
-        .card{
-
-            background:#1c3d68;
-
-            padding:16px;
-
-            margin:16px 0;
-
-            border-radius:16px;
-
-        }
-
-        .buttonbar{
-
-            display:flex;
-
-            gap:10px;
-
-            justify-content:center;
-
-            flex-wrap:wrap;
-
-            margin:20px 0;
-
-        }
-
-        button{
-
-            padding:12px 18px;
-
-            border:none;
-
-            border-radius:12px;
-
-            background:#f0c84b;
-
-            font-weight:bold;
-
-            cursor:pointer;
-
-        }
-
-        .cats{
-
-            display:grid;
-
-            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-
-            gap:16px;
-
-        }
-
-        .cat{
-
-            background:#244d80;
-
-            border-radius:12px;
-
-            padding:12px;
-
-            text-align:center;
-
-        }
-
-        img{
-
-            max-width:100%;
-
-            border-radius:10px;
-
-        }
-
-        .stats{
-
-            display:flex;
-
-            justify-content:space-around;
-
-            text-align:center;
-
-            flex-wrap:wrap;
-
-            gap:10px;
-
-        }
-
-    </style>
-
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Arial; -webkit-text-stroke: #000000; background-color: #ffffff; background-color: rgba(255, 255, 255, 0.078)}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020; background-color: #000000; background-color: rgba(0, 0, 0, 0.35); min-height: 14.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020; background-color: #fecd0a; min-height: 14.0px}
+    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 24.0px '.SF NS'; color: #fecd0a; -webkit-text-stroke: #fecd0a}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 28.0px Arial; color: #fc499a; -webkit-text-stroke: #fc499a}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Arial; color: #1a1a1a; -webkit-text-stroke: #1a1a1a}
+    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 14.0px Arial; color: #ffffff; color: rgba(255, 255, 255, 0.92); -webkit-text-stroke: rgba(255, 255, 255, 0.92)}
+    p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px Arial; color: #202020; -webkit-text-stroke: #202020; background-color: #fece3f; min-height: 26.0px}
+    p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px Arial; -webkit-text-stroke: #000000}
+    p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px Arial; -webkit-text-stroke: #000000; background-color: #ffffff; background-color: rgba(255, 255, 255, 0.12)}
+    p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 22.0px Arial; -webkit-text-stroke: #000000; background-color: #fecd0a; min-height: 26.0px}
+    p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 18.3px Arial; -webkit-text-stroke: #000000}
+    p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 22.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p19 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 14.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p20 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 11.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p21 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px 'Apple Color Emoji'; color: #202020; -webkit-text-stroke: #202020}
+    p.p22 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020; background-color: #11284a}
+    p.p24 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p26 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020}
+    p.p27 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Arial; color: #202020; -webkit-text-stroke: #202020; background-color: #11284a}
+    p.p28 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; color: #f1f1f1; -webkit-text-stroke: #f1f1f1; background-color: #ffffff; background-color: rgba(255, 255, 255, 0.078)}
+    span.s1 {font: 13.0px 'Apple Color Emoji'; font-kerning: none}
+    span.s2 {font-kerning: none}
+    span.s3 {font: 18.0px 'Apple Color Emoji'; font-kerning: none}
+    span.s4 {font-kerning: none; background-color: #0e0e0e}
+    span.s5 {font: 12.0px Arial; font-kerning: none; color: #202020; -webkit-text-stroke: 0px #202020}
+    span.s6 {font-kerning: none; text-shadow: 0.0px 2.0px 4.0px #000000}
+    span.s7 {font-kerning: none; background-color: #f0e2bd}
+    span.s8 {font: 25.7px 'Apple Color Emoji'; font-kerning: none; background-color: #0e1a2e}
+    span.s9 {font: 25.7px Arial; font-kerning: none; background-color: #0e1a2e}
+    span.s10 {font: 25.7px Arial; font-kerning: none}
+    span.s11 {font-kerning: none; background-color: #0e1a2e}
+    span.s12 {font: 17.9px Arial; font-kerning: none; background-color: #0e1a2e}
+    span.s13 {font: 17.9px 'Apple Color Emoji'; font-kerning: none; background-color: #0e1a2e}
+    span.s14 {font: 21.4px 'Apple Color Emoji'; font-kerning: none; background-color: #0e1a2e}
+    span.s15 {font: 22.0px 'Apple Color Emoji'; font-kerning: none; background-color: #0e1a2e}
+    span.s16 {font-kerning: none; background-color: rgba(255, 255, 255, 0.12)}
+    span.s17 {font-kerning: none; background-color: rgba(0, 0, 0, 0.15)}
+    span.s18 {font: 18.3px 'Apple Color Emoji'; font-kerning: none; background-color: rgba(0, 0, 0, 0.15)}
+    span.s19 {font-kerning: none; background-color: #13243e}
+    span.s20 {font: 12.0px 'Apple Color Emoji'; font-kerning: none; background-color: rgba(163, 43, 255, 0.25)}
+    span.s21 {font-kerning: none; background-color: rgba(163, 43, 255, 0.25)}
+    span.s22 {font: 14.0px 'Apple Color Emoji'; font-kerning: none; background-color: #13243e}
+    span.s23 {font: 12.0px 'Apple Color Emoji'; font-kerning: none; background-color: rgba(65, 139, 255, 0.25)}
+    span.s24 {font-kerning: none; background-color: rgba(65, 139, 255, 0.25)}
+    span.s25 {font-kerning: none; background-color: #11284a}
+    span.s26 {font: 14.0px 'Apple Color Emoji'; font-kerning: none; background-color: #11284a}
+    span.s27 {font: 14.0px Arial; font-kerning: none; background-color: #11284a}
+    span.s28 {font: 14.0px Arial; font-kerning: none}
+    span.s29 {font: 11.7px 'Apple Color Emoji'; font-kerning: none; background-color: #11284a}
+    span.s30 {font: 12.0px 'Apple Symbols'; font-kerning: none; background-color: #11284a}
+    span.s31 {font: 12.0px 'Lucida Grande'; font-kerning: none; background-color: #11284a}
+  </style>
 </head>
-
 <body>
-
-<h1>🐱 Go Snuggiez 🐱</h1>
-
-<div class="card">
-
-    <h2>🏆 Day 3</h2>
-
-    <p style="text-align:center;">
-
-        XP: 0 | Level: 1 | Cats: 3
-
-    </p>
-
-    <div class="buttonbar">
-
-        <button>🍖 GIVE TREAT</button>
-
-        <button>🔎 FOOD HUNT</button>
-
-        <button>🐾 RESCUE CAT</button>
-
-    </div>
-
-</div>
-
-<div class="card">
-
-    <h2>SHELTER CATS</h2>
-
-    <div class="cats">
-
-        <div class="cat">
-
-            <img src="frilagdbeachkatt.png">
-
-            <h3>🏖️ Beach Cat</h3>
-
-            <p>Eats 12 shrimps a day.</p>
-
-        </div>
-
-        <div class="cat">
-
-            <img src="frilagdpunkkatt.png">
-
-            <h3>🤘 Punk Cat</h3>
-
-            <p>Owns 4 tiny guitars.</p>
-
-        </div>
-
-        <div class="cat">
-
-            <img src="frilagdgolfkatt.png">
-
-            <h3>⛳ Golf Cat</h3>
-
-            <p>Lost 482 golf balls.</p>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="card">
-
-    <h2>📰 Shelter News</h2>
-
-    <p>🌊 Strange little footprints lead from the lagoon toward the old dunes.</p>
-
-    <p>🐠 Tiny glowing fish gathered where the shell trail ends.</p>
-
-    <p>🌵 Someone spotted Desert Dave beyond the dunes...</p>
-
-</div>
-
-<div class="card">
-
-    <h2>🌵 Next Unlock</h2>
-
-    <p><b>Desert Dave</b></p>
-
-    <p>247 / 300 rescues</p>
-
-    <p>53 rescues remaining.</p>
-
-</div>
-
-<div class="card stats">
-
-    <div>
-
-        <h2>🏆</h2>
-
-        <p>247<br>Rescues</p>
-
-    </div>
-
-    <div>
-
-        <h2>🍖</h2>
-
-        <p>431<br>Treats</p>
-
-    </div>
-
-    <div>
-
-        <h2>🐱</h2>
-
-        <p>3 / 12<br>Cats</p>
-
-    </div>
-
-    <div>
-
-        <h2>⭐</h2>
-
-        <p>2<br>Badges</p>
-
-    </div>
-
-</div>
-
+<p class="p1"><span class="s1">🏆</span><span class="s2"><b> 2/5</b></span></p>
+<p class="p1"><span class="s1">🔥</span><span class="s2"><b> Day 3</b></span></p>
+<p class="p1"><span class="s1">🐱</span><span class="s2"><b> Punk Cat</b></span></p>
+<p class="p1"><span class="s1">📰</span><span class="s2"><b> Dunes...</b></span></p>
+<p class="p2"><span class="s2"></span><br></p>
+<p class="p3"><span class="s2"><img src="file:///Attachment.png" alt="Attachment.png"></span></p>
+<h2 style="margin: 0.0px 0.0px 14.9px 0.0px; text-align: center; font: 18.0px Arial; color: #202020; -webkit-text-stroke: #202020"><span class="s3">⛳</span><span class="s2"><b> Golf Cat</b></span></h2>
+<p class="p3"><span class="s2">XP: 0 | Level: 1 | Cats: 3</span></p>
+<p class="p5"><span class="s2"></span><br></p>
+<p class="p6"><span class="s4"><b>GIVE TREAT</b></span><span class="s5"> </span><span class="s4"><b>FOOD HUNT</b></span><span class="s5"> </span><span class="s4"><b>RESCUE CAT</b><b></b></span></p>
+<p class="p7"><span class="s6"><b>Welcome back!</b></span></p>
+<h2 style="margin: 0.0px 0.0px 14.9px 0.0px; font: 18.0px Arial; -webkit-text-stroke: #000000"><span class="s2"><b>SHELTER CATS</b></span></h2>
+<p class="p9"><span class="s2"><img src="file:///Attachment.png" alt="Attachment.png"></span></p>
+<p class="p9"><span class="s7">Beach Cat</span></p>
+<p class="p10"><span class="s7"><i>Eats 12 shrimps a day.</i><i></i></span></p>
+<p class="p9"><span class="s2"><img src="file:///Attachment.png" alt="Attachment.png"></span></p>
+<p class="p9"><span class="s7">Punk Cat</span></p>
+<p class="p10"><span class="s7"><i>Owns 4 tiny guitars.</i><i></i></span></p>
+<p class="p9"><span class="s2"><img src="file:///Attachment.png" alt="Attachment.png"></span></p>
+<p class="p9"><span class="s7">Golf Cat</span></p>
+<p class="p10"><span class="s7"><i>Lost 482 golf balls.</i><i></i></span></p>
+<h3 style="margin: 0.0px 0.0px 25.7px 0.0px; font: 21.4px Arial; color: #202020; -webkit-text-stroke: #202020"><span class="s8">📰</span><span class="s9"><b> CAT NEWS</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>CORAL TRAIL • Strange little footprints lead from the lagoon toward the old dunes.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SECRET LAGOON • Tiny glowing fish gathered where the shell trail ends.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>LOST LIGHTHOUSE • A distant lantern flickered across the bay just before sunrise.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>TREASURE TIDE • The old map points toward a hidden beach where Desert Dave was last seen.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>STARFISH SIGNAL • A curious starfish appeared beside the old shell trail.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>MOONLIT PIER • A friendly seagull dropped an old treasure map near the shelter.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>HIDDEN COVE • Beach Cat discovered a tiny cave filled with shiny shells.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SEASIDE POSTCARD • A tiny crab delivered a mysterious message for Beach Cat.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>TIDE REPORT • A colorful shell washed ashore near the cat shelter.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SUNRISE WATCH • Golf Cat spotted tiny pawprints by the shoreline.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>BEACH BONFIRE • The shelter cats found a glowing shell by the old pier.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>NIGHT PATROL • Punk Cat and Beach Cat are guarding the treats stash.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SHELTER RADIO • Beach Cat says the seashells are humming tonight.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>DESERT WHISPERS • Someone spotted Desert Dave beyond the dunes...</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SHELTER DISCOVERY • A mysterious pawprint was found near the dunes.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>ACTIVE CAT</b></span><span class="s2"><b><br>
+</b></span><span class="s12"><b>ACTIVE CAT PERK • +5% Lucky Finds • Favorite Item: Lucky Shell </b></span><span class="s13">🐚</span><span class="s11"><b> BONUS • Beach Cat found a shiny shell.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>SHELTER SPOTLIGHT • Punk Cat started a tiny garage band.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>TODAY'S SHELTER TIP • Treats make shy cats curious.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>Beach Cat stole another golf ball.</b></span><span class="s10"><b><br>
+</b></span><span class="s8">😺</span><span class="s9"><b> Shelter Mood: Cozy &amp; Happy • 3 cats rescued today • Shelter visitors: 12 • New arrivals this week: 1 • Next rescue in: Soon™</b></span><span class="s10"><b><br>
+</b></span><span class="s8">🌵</span><span class="s9"><b> NEXT UNLOCK</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>MYSTERY TRACKER • 3 strange clues have been found.</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>DESERT DAVE SILHOUETTE ? • A lonely figure waits beyond the dunes...</b></span><span class="s10"><b><br>
+</b></span><span class="s11"><b>DESERT DAVE PREVIEW • World Preview: </b></span><span class="s14">🐠</span><span class="s11"><b> Aquarium AI • </b></span><span class="s14">🌋</span><span class="s11"><b> Volcano Vince • </b></span><span class="s14">🌵</span><span class="s11"><b> A mysterious desert wanderer is almost here...</b><b></b></span></h3>
+<p class="p12"><span class="s15">🌵</span><span class="s11"><b> Desert Dave</b><b></b></span></p>
+<p class="p12"><span class="s11"><b>247 / 300 Rescues</b><b></b></span></p>
+<p class="p13"><span class="s2"><b></b></span><br></p>
+<p class="p12"><span class="s11"><b>53 rescues remaining</b><b></b></span></p>
+<p class="p14"><span class="s16"><b>Collection Progress</b><b></b></span></p>
+<p class="p15"><span class="s2"><b>3 / 12</b><b></b></span></p>
+<p class="p16"><span class="s2"><b></b></span><br></p>
+<p class="p14"><span class="s17"><b>LOCKED CATS COLLECTION</b><b></b></span></p>
+<p class="p17"><span class="s18">🔮</span><span class="s17"><b> Coming soon: </b></span><span class="s18">🐠</span><span class="s17"><b> Aquarium Al • </b></span><span class="s18">🌋</span><span class="s17"><b> Volcano Vince • </b></span><span class="s18">🌵</span><span class="s17"><b> Desert Dave</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>WINCENT</b><b></b></span></p>
+<p class="p3"><span class="s20">🟣</span><span class="s21"><b> EPIC</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Rescue 25 Cats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>Leader of the alley cats.</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>CONSPIRACY CLAWS</b><b></b></span></p>
+<p class="p3"><span class="s20">🟣</span><span class="s21"><b> EPIC</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Rescue 25 Cats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>Leader of the alley cats.</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>BUFF MUFFIN</b><b></b></span></p>
+<p class="p3"><span class="s23">🔵</span><span class="s24"><b> RARE</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Feed 500 Treats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>A local shelter legend.</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>CAPTAIN CATFISH</b><b></b></span></p>
+<p class="p3"><span class="s23">🔵</span><span class="s24"><b> RARE</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Feed 500 Treats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>A local shelter legend.</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>WAVEY WALTER</b><b></b></span></p>
+<p class="p3"><span class="s23">🔵</span><span class="s24"><b> RARE</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Feed 500 Treats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>A local shelter legend.</b><b></b></span></p>
+<p class="p18"><span class="s2"><b><img src="file:///Attachment.png" alt="Attachment.png"></b><b></b></span></p>
+<p class="p18"><span class="s19"><b>RAD RUFUS</b><b></b></span></p>
+<p class="p3"><span class="s23">🔵</span><span class="s24"><b> RARE</b><b></b></span></p>
+<p class="p19"><span class="s22">🔒</span><span class="s19"><b> LOCKED</b><b></b></span></p>
+<p class="p19"><span class="s19"><b>Feed 500 Treats</b><b></b></span></p>
+<p class="p20"><span class="s19"><b>A local shelter legend.</b><b></b></span></p>
+<p class="p21"><span class="s25">🏆</span></p>
+<p class="p3"><span class="s25"><b>247</b><b></b></span></p>
+<p class="p22"><span class="s2"><b>Rescues</b></span></p>
+<p class="p21"><span class="s25">🍖</span></p>
+<p class="p3"><span class="s25"><b>431</b><b></b></span></p>
+<p class="p22"><span class="s2"><b>Treats</b></span></p>
+<p class="p21"><span class="s25">🐱</span></p>
+<p class="p3"><span class="s25"><b>3/12</b><b></b></span></p>
+<p class="p22"><span class="s2"><b>Cats</b></span></p>
+<p class="p21"><span class="s25">⭐</span></p>
+<p class="p3"><span class="s25"><b>2</b><b></b></span></p>
+<p class="p22"><span class="s2"><b>Badges</b></span></p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 11.7px Arial; color: #202020; -webkit-text-stroke: #202020"><span class="s26">🏆</span><span class="s27"><b> ACHIEVEMENTS</b></span><span class="s28"><b><br>
+</b></span><span class="s25"><b>COLLECTOR BONUS • Find 10 shiny shells.</b></span><span class="s28"><b><br>
+</b></span><span class="s25"><b>FIRST BADGE • Shell Scout </b></span><span class="s29">🐚</span></h3>
+<p class="p24"><span class="s30">☑</span><span class="s25"> Feed 100 Treats</span></p>
+<p class="p24"><span class="s30">☑</span><span class="s25"> Rescue 100 Cats</span></p>
+<p class="p24"><span class="s30">☐</span><span class="s25"> Unlock Desert Dave</span></p>
+<p class="p24"><span class="s30">☐</span><span class="s25"> Reach Level 5</span></p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Arial; color: #202020; -webkit-text-stroke: #202020"><span class="s26">🔥</span><span class="s25"><b> DAILY STREAK</b><b></b></span></h3>
+<p class="p24"><span class="s25">Day 1 </span><span class="s31">✓</span><span class="s25"> Day 2 </span><span class="s31">✓</span><span class="s25"> Day 3 </span><span class="s31">✓</span></p>
+<p class="p24"><span class="s25">Current Streak: 3</span></p>
+<p class="p26"><span class="s25">ACTIVE CAT</span></p>
+<p class="p26"><span class="s25"><b>PUNK CAT</b><b></b></span></p>
+<p class="p27"><span class="s2">+10% Treat Bonus</span></p>
+<p class="p28"><span class="s2"><b>DESERT DAVE</b> — Coming soon! Reach 300 rescues to unlock.</span></p>
 </body>
-
 </html>
