@@ -1,1295 +1,257 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Go Snuggiez V50</title>
-<style>
-body{margin:0;font-family:Arial;background:linear-gradient(180deg,#ffd400 0%,#ffd400 32%,#46a8d8 32%,#46a8d8 100%)}
-.header{display:none !important;height:0;overflow:hidden;padding:0;margin:0}
-.wrap{max-width:1500px;margin:auto;padding:20px}
-.play{
-border-radius:30px;
-padding:30px;
-text-align:center;
-color:#2b2b2b;
-background-size:cover;
-background-position:center;
-position:relative;
-overflow:hidden;
-min-height:520px;
-}
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,.35)}
-.content{position:relative;z-index:2}
-.hero img{max-height:320px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.4))}
-.bar{height:26px;background:rgba(0,0,0,.4);border-radius:20px;overflow:hidden;max-width:500px;margin:14px auto}
-.fill{height:100%;background:#ffd400}
-button{font-size:24px;padding:14px 24px;margin:8px;border:none;border-radius:16px;cursor:pointer}
-.msg{font-size:28px;font-weight:bold;color:#ff66aa;text-shadow:0 2px 4px #000}
-.shelter{
-background:linear-gradient(135deg,#2d8148 0%,#5d9d49 52%,#f39b2f 100%);
-border-radius:24px;padding:20px;margin-top:20px;position:relative;overflow:hidden}
-.shelter:before{content:"🌴";position:absolute;left:12px;top:8px;font-size:42px}
-.shelter:after{content:"🐚 🍄";position:absolute;right:18px;bottom:12px;font-size:34px}
-.room div p{color:#2b2b2b!important;font-weight:bold!important}
 
-.room{display:flex;justify-content:space-around;flex-wrap:wrap}
-.room img{height:220px}
-</style>
-<style>
-.hero img,#cat,#activeCat{animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(255,255,255,.55));}
-@keyframes bob{50%{transform:translateY(-10px)}}
-button{
- background:#111!important;
- color:#ffd400!important;
- border:3px solid #ffd400!important;
- border-radius:18px!important;
- box-shadow:0 0 15px rgba(255,80,160,.8)!important;
- font-weight:800!important;
-}
-.xpPop{
- position:fixed;left:50%;top:45%;
- color:#7dff3c;font-size:34px;font-weight:bold;
- pointer-events:none;animation:rise 1s forwards;
-}
-@keyframes rise{
- from{opacity:1;transform:translate(-50%,0)}
- to{opacity:0;transform:translate(-50%,-80px)}
-}
-</style>
+<html lang="en">
 
-<style>
-.shelter-title{
- font-size:48px!important;
- font-weight:900!important;
- letter-spacing:2px;
-}
-.cat-card,.shelter-card{
- background:rgba(0,0,0,.15);
- border-radius:24px;
- padding:12px;
- transition:.25s;
- cursor:pointer;
-}
-.cat-card:hover,.shelter-card:hover{
- transform:translateY(-8px) scale(1.03);
- box-shadow:0 0 24px rgba(255,215,0,.7);
-}
-.active-selected{
- outline:4px solid #ffd400;
- box-shadow:0 0 28px #ffd400;
-}
-</style>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- document.querySelectorAll('img').forEach(img=>{
-   img.style.cursor='pointer';
- });
-});
-</script>
+<head>
 
-<style>
-@keyframes catFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-img[src*="cat"], .activeCat, #activeCat, #cat{
- animation:catFloat 3s ease-in-out infinite;
-}
-.selected-cat{
- outline:4px solid #ffd400;
- box-shadow:0 0 24px #ffd400;
- border-radius:18px;
-}
-.xp-fly{
- position:fixed;left:50%;top:55%;
- color:#7dff3c;font-size:32px;font-weight:900;
- pointer-events:none;animation:flyUp 1s forwards;
-}
-@keyframes flyUp{
- from{opacity:1;transform:translate(-50%,0)}
- to{opacity:0;transform:translate(-50%,-90px)}
-}
-</style>
+    <meta charset="UTF-8">
 
-<style>
-@keyframes catFloat {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
-}
-@keyframes catGlow {
-  0% { filter: drop-shadow(0 0 6px rgba(255,215,0,.5)); }
-  50% { filter: drop-shadow(0 0 18px rgba(255,215,0,.9)); }
-  100% { filter: drop-shadow(0 0 6px rgba(255,215,0,.5)); }
-}
-img[alt*="Cat"], .active-cat img, .hero-cat img{
-  animation: catFloat 4s ease-in-out infinite, catGlow 3s ease-in-out infinite;
-}
-button{
-  transition: transform .15s ease;
-}
-button:active{
-  transform: scale(.95);
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style id="v97-shelter-upgrade">
-.shelter-cats, .shelter-section, [id*="shelter"], [class*="shelter"]{
- background-image:
- radial-gradient(circle at 8% 15%, rgba(255,180,200,.35) 0 25px, transparent 26px),
- radial-gradient(circle at 92% 18%, rgba(255,220,150,.25) 0 18px, transparent 19px),
- radial-gradient(circle at 15% 85%, rgba(255,220,150,.25) 0 18px, transparent 19px),
- linear-gradient(to bottom, rgba(255,255,255,.04), rgba(255,255,255,0));
- position:relative;
-}
-.shelter-cats:before,.shelter-section:before{
- content:"🌴 🌺 🐚";
- position:absolute;top:10px;left:12px;font-size:34px;opacity:.55;
-}
-.shelter-cats:after,.shelter-section:after{
- content:"🌊 🌊 🌊";
- position:absolute;bottom:10px;right:18px;font-size:26px;opacity:.4;
-}
-</style>
+    <title>Go Snuggiez 🐱</title>
 
-<style id="v104-shelter-row">
-.room{
-display:flex!important;
-flex-wrap:nowrap!important;
-justify-content:center!important;
-align-items:flex-start!important;
-gap:20px!important;
-}
-.room > div{
-flex:1;
-max-width:320px;
-min-width:220px;
-background:rgba(255,255,255,.12);
-border-radius:22px;
-padding:12px;
-text-align:center;
-}
-.room img{
-height:240px!important;
-object-fit:contain;
-}
-</style>
+    <style>
 
-<style id="v110fix">
-.room > div > div:nth-of-type(3){display:none!important;}
-.locked-cat{font-weight:700;padding:10px 14px!important}
-</style>
+        body{
 
-<style>
-.locked-cats button,.locked-cat,.locked-item{
- border-radius:16px!important;
- padding:12px!important;
- box-shadow:0 0 10px rgba(255,255,255,.15);
-}
-</style>
+            margin:0;
 
+            padding:20px;
 
-<style id="v113-locked-cards">
-.locked-card,.locked-item,.locked-cats button{
-border-radius:18px!important;
-padding:14px!important;
-font-weight:700!important;
-box-shadow:0 0 12px rgba(255,255,255,.18)!important;
-}
-</style>
+            background:#11284a;
 
+            color:white;
 
-<style id="v116-upgrade">
-.locked-grid{gap:16px!important;}
-.locked-card{
- min-height:240px!important;
- border-radius:20px!important;
- padding:14px!important;
-}
-.locked-card img{
- width:140px!important;
- height:140px!important;
- object-fit:contain!important;
-}
-.locked-card.epic{
- box-shadow:0 0 18px rgba(180,80,255,.55)!important;
-}
-.locked-card.rare{
- box-shadow:0 0 18px rgba(80,160,255,.45)!important;
-}
-.locked-card small{
- display:block;
- margin-top:8px;
- font-size:14px;
-}
-</style>
+            font-family:Arial, Helvetica, sans-serif;
 
+            max-width:900px;
 
-<style id="v117-badges">
-.locked-card{
- transition:transform .2s ease, box-shadow .2s ease;
-}
-.locked-card:hover{
- transform:translateY(-5px);
-}
-.rarity-badge{
- display:inline-block;
- padding:4px 10px;
- border-radius:999px;
- font-size:12px;
- font-weight:700;
- margin:4px 0;
-}
-.rarity-epic{background:rgba(180,80,255,.25);}
-.rarity-rare{background:rgba(80,160,255,.25);}
-.lore{font-size:11px;opacity:.9;margin-top:4px;}
-</style>
+            margin:auto;
 
+        }
 
-<style id="rc1-visual-balance">
-body{background:#d9b800!important;}
-.shelter{
- background:linear-gradient(135deg,#35c9da,#58c96f)!important;
-}
-.progress-panel,.next-unlock,.collection-progress{
- background:#303646!important;
- color:#2b2b2b!important;
-}
-.locked-cats,.collection-area{
- background:#d8c06a!important;
-}
-</style>
+        h1,h2,h3{
 
+            text-align:center;
 
-<style id="rc1-cleanup-v2">
-#shelter-stats{
-max-width:520px!important;
-margin:16px auto!important;
-padding:16px!important;
-min-height:auto!important;
-}
-#shelter-stats p{
-margin:6px 0!important;
-}
-.locked-card{
-transition:transform .2s ease!important;
-}
-.locked-card:hover{
-transform:translateY(-4px)!important;
-}
-</style>
+        }
 
+        .card{
 
-<style id="rc1-visual-pass">
-body{background:#ffd400!important;}
-.shelter{background:linear-gradient(90deg,#1F7A45,#57c45f)!important;}
-#shelter-stats,.shelter-stats{
-max-width:900px!important;
-margin:30px auto!important;
-background:#2d3347!important;
-color:#2b2b2b!important;
-border-radius:24px!important;
-}
-.progress-section,.collection-progress{
-max-height:120px!important;
-overflow:hidden!important;
-}
-.locked-section,.locked-cats{
-background:#2d3347!important;
-color:#2b2b2b!important;
-border-radius:24px!important;
-padding:20px!important;
-}
-</style>
+            background:#1c3d68;
 
-<style id="rc1-dark-theme">
-body{
- background:#071629 !important;
-}
-#next-unlock-panel,
-.collection-progress,
-#shelter-stats{
- background:#10233d !important;
- color:#2b2b2b !important;
- border-radius:18px !important;
-}
-.locked-card{
- background:#18314f !important;
- color:#2b2b2b !important;
-}
-.locked-card:hover{
- transform:translateY(-4px);
-}
-</style>
+            padding:16px;
 
+            margin:16px 0;
 
-<style id="rc1-sky-theme">
-body{
-background:linear-gradient(180deg,#ffd400 0px,#ffd400 700px,#2563EB 700px,#1D4ED8 100%) !important;
-}
-.shelter{
-background:linear-gradient(135deg,#43c6db,#65d69b)!important;
-}
-.progress-card,.unlock-card,.locked-section,.stats-panel{
-background:#0f3f74!important;
-color:#2b2b2b!important;
-}
-</style>
+            border-radius:16px;
 
-<style id="rc1-buildpass">
-body{
-background:linear-gradient(#ffd400 0 80px,#2563EB 80px,#1D4ED8 100%) !important;
-}
-.shelter{
-background:linear-gradient(135deg,#39b7d4,#4fc8a8,#6abf5f)!important;
-position:relative;
-}
-.shelter:before{content:"🌴";position:absolute;left:12px;top:8px;font-size:28px}
-.shelter:after{content:"🐚 🌼 🍄";position:absolute;right:12px;bottom:8px;font-size:20px}
-</style>
+        }
+
+        .buttonbar{
+
+            display:flex;
+
+            gap:10px;
+
+            justify-content:center;
+
+            flex-wrap:wrap;
+
+            margin:20px 0;
+
+        }
+
+        button{
+
+            padding:12px 18px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:#f0c84b;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+        }
+
+        .cats{
+
+            display:grid;
+
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+            gap:16px;
+
+        }
+
+        .cat{
+
+            background:#244d80;
+
+            border-radius:12px;
+
+            padding:12px;
+
+            text-align:center;
+
+        }
+
+        img{
+
+            max-width:100%;
+
+            border-radius:10px;
+
+        }
+
+        .stats{
+
+            display:flex;
+
+            justify-content:space-around;
+
+            text-align:center;
+
+            flex-wrap:wrap;
+
+            gap:10px;
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<style id="bp76-widgetbar">
-#bp76WidgetBar{
- display:flex;gap:8px;justify-content:center;align-items:center;
- margin:10px 12px;padding:8px 10px;border-radius:14px;
- background:rgba(0,0,0,.15);font-size:13px;font-weight:700;
-}
-#bp76WidgetBar span{padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);}
-</style>
-<div id="bp76WidgetBar">
- <span>🏆 2/5</span>
- <span>🔥 Day 3</span>
- <span>🐱 Punk Cat</span>
- <span>📰 Dunes...</span>
-</div>
 
-<div class="header">GO SNUGGIEZ</div>
-<div class="wrap">
+<h1>🐱 Go Snuggiez 🐱</h1>
 
-<div id="play" class="play" style="background-image:url('golfcat.jpg')">
-<div class="overlay"></div>
-<div class="content">
-<div class="hero"><img id="cat" src="frilagdgolfkatt.png"></div>
-<h2 id="name">⛳ Golf Cat</h2>
-<div>XP: <span id="xp">0</span> | Level: <span id="lvl">1</span> | Cats: <span id="cats">3</span></div>
-<div class="bar"><div id="fill" class="fill"></div></div>
+<div class="card">
 
-<button onclick="giveTreat()">GIVE TREAT</button>
-<button onclick="foodHunt()">FOOD HUNT</button>
-<button onclick="rescueCat()">RESCUE CAT</button>
+    <h2>🏆 Day 3</h2>
 
-<div id="msg" class="msg">Welcome back!</div>
-</div>
-</div>
+    <p style="text-align:center;">
 
-<div class="shelter">
-<h2>SHELTER CATS</h2>
-<div class="room">
-<div class='cat-card sandy'><img src="frilagdbeachkatt.png"><div>Beach Cat</div><div class='cat-fact'>Eats 12 shrimps a day.</div></div>
-<div class='cat-card sandy'><img src="frilagdpunkkatt.png"><div>Punk Cat</div><div class='cat-fact'>Owns 4 tiny guitars.</div></div>
-<div class='cat-card sandy'><img src="frilagdgolfkatt.png"><div>Golf Cat</div><div class='cat-fact'>Lost 482 golf balls.</div></div>
-</div>
-</div>
+        XP: 0 | Level: 1 | Cats: 3
+
+    </p>
+
+    <div class="buttonbar">
+
+        <button>🍖 GIVE TREAT</button>
+
+        <button>🔎 FOOD HUNT</button>
+
+        <button>🐾 RESCUE CAT</button>
+
+    </div>
 
 </div>
 
-<script>
-let xp=parseInt(localStorage.gsxp||0);
-let cats=parseInt(localStorage.gscats||3);
+<div class="card">
 
-function render(){
-xp=parseInt(localStorage.gsxp||xp);
-cats=parseInt(localStorage.gscats||cats);
-xpEl.textContent=xp;
-lvl.textContent=Math.floor(xp/100)+1;
-catsEl.textContent=cats;
-fill.style.width=(xp%100)+'%';
-}
-const xpEl=document.getElementById('xp');
-const lvl=document.getElementById('lvl');
-const catsEl=document.getElementById('cats');
-const fill=document.getElementById('fill');
+    <h2>SHELTER CATS</h2>
 
-function scene(bg,cat,name,msg,color){
-play.style.backgroundImage=`url('${bg}')`;
-document.getElementById('cat').src=cat;
-document.getElementById('name').textContent=name;
-let m=document.getElementById('msg');
-m.textContent=msg;
-m.style.color=color;
-}
+    <div class="cats">
 
-function giveTreat(){
-xp+=10; localStorage.gsxp=xp;
-scene('golfcat.jpg','frilagdgolfkatt.png','⛳ Golf Cat','PURR-FECT TREAT!','#7dff3c');
-render();
-}
+        <div class="cat">
 
-function foodHunt(){
-xp+=25; localStorage.gsxp=xp;
-scene('punkcat.jpg','frilagdpunkkatt.png','🛹 Punk Cat','PIZZA FOUND!','#ff4fa0');
-render();
-}
+            <img src="frilagdbeachkatt.png">
 
-function rescueCat(){
-xp+=50; cats++;
-localStorage.gsxp=xp; localStorage.gscats=cats;
-scene('beachcat.jpg','frilagdbeachkatt.png','🌴 Beach Cat','NEW RESCUE CAT!','#4fd5ff');
-render();
-}
-render();
-</script>
+            <h3>🏖️ Beach Cat</h3>
 
-<script>
-function xpPop(txt){
- const d=document.createElement('div');
- d.className='xpPop';
- d.textContent=txt;
- document.body.appendChild(d);
- setTimeout(()=>d.remove(),1000);
-}
-document.querySelectorAll('button').forEach(b=>{
- b.addEventListener('click',()=>xpPop('+XP'));
-});
-</script>
+            <p>Eats 12 shrimps a day.</p>
 
-<script>
-function xpFly(t){
- const e=document.createElement('div');
- e.className='xp-fly';
- e.textContent=t;
- document.body.appendChild(e);
- setTimeout(()=>e.remove(),1000);
-}
-document.querySelectorAll('button').forEach(btn=>{
- btn.addEventListener('click',()=>xpFly('+XP'));
-});
-document.querySelectorAll('img').forEach(img=>{
- img.addEventListener('click',()=>{
-   document.querySelectorAll('img').forEach(i=>i.classList.remove('selected-cat'));
-   img.classList.add('selected-cat');
- });
-});
-document.querySelectorAll('audio').forEach(a=>{
- a.volume=0.4;
-});
-</script>
+        </div>
 
-<style>
-.shelter{background:linear-gradient(135deg,#1F7A45,#4caf50)!important}
-#activeCat,#cat,.activeCat{animation:floaty 2.8s ease-in-out infinite}
-@keyframes floaty{50%{transform:translateY(-10px)}}
-.selected-cat{outline:4px solid #ffd400;box-shadow:0 0 24px #ffd400}
-</style>
-<audio id="sndTreat" src="dragon-studio-purring-cat-401727.mp3" preload="auto"></audio>
-<audio id="sndHunt" src="dragon-studio-meowing-cat-401728.mp3" preload="auto"></audio>
-<audio id="sndRescue" src="dragon-studio-cat-meow-401729.mp3" preload="auto"></audio>
-<script>
-window.addEventListener('load',()=>{
- const t=document.getElementById('sndTreat');
- const h=document.getElementById('sndHunt');
- const r=document.getElementById('sndRescue');
- [t,h,r].forEach(a=>{if(a)a.volume=.35;});
- const play=(a)=>{try{a.currentTime=0;a.play()}catch(e){}};
- document.querySelectorAll('button').forEach(b=>{
-   const txt=(b.textContent||'').toUpperCase();
-   b.addEventListener('click',()=>{
-      if(txt.includes('TREAT')) play(t);
-      else if(txt.includes('HUNT')) play(h);
-      else if(txt.includes('RESCUE')) play(r);
-   });
- });
- document.querySelectorAll('img').forEach(img=>{
-   img.addEventListener('click',()=>{
-      document.querySelectorAll('img').forEach(i=>i.classList.remove('selected-cat'));
-      img.classList.add('selected-cat');
-   });
- });
-});
-</script>
+        <div class="cat">
 
-<style>
-.xp-pop{
- position:fixed;left:50%;top:52%;
- transform:translateX(-50%);
- color:#7dff3c;font-size:42px;font-weight:900;
- pointer-events:none;z-index:9999;
- animation:xpRise .9s forwards;
-}
-.reward-pop{
- position:fixed;left:50%;top:45%;
- transform:translateX(-50%);
- font-size:48px;pointer-events:none;z-index:9999;
- animation:xpRise 1.1s forwards;
-}
-@keyframes xpRise{
- from{opacity:1;transform:translate(-50%,0) scale(1)}
- to{opacity:0;transform:translate(-50%,-90px) scale(1.2)}
-}
-button:active{transform:scale(.94)!important}
-</style>
-<script>
-window.addEventListener('load',()=>{
- function popup(text,cls){
-   const d=document.createElement('div');
-   d.className=cls;
-   d.textContent=text;
-   document.body.appendChild(d);
-   setTimeout(()=>d.remove(),1100);
- }
- const rewards=['🐟 FISH +80','🍕 PIZZA +120','🍗 CHICKEN +100','⭐ BONUS +250'];
+            <img src="frilagdpunkkatt.png">
 
- document.querySelectorAll('button').forEach(btn=>{
-   btn.addEventListener('click',()=>{
-      const t=(btn.textContent||'').toUpperCase();
+            <h3>🤘 Punk Cat</h3>
 
-      if(t.includes('TREAT')){
-        popup('+50 XP','xp-pop');
-      }
-      else if(t.includes('HUNT')){
-        popup(rewards[Math.floor(Math.random()*rewards.length)],'reward-pop');
-      }
-      else if(t.includes('RESCUE')){
-        popup('NEW CAT!','reward-pop');
-      }
-   });
- });
-});
-</script>
+            <p>Owns 4 tiny guitars.</p>
 
-<style>
-.arcade-popup{
- position:fixed;
- left:50%; top:50%;
- transform:translate(-50%,-50%);
- font-size:54px;
- font-weight:900;
- color:#ffd400;
- -webkit-text-stroke: 3px #111;
- text-shadow:0 0 20px rgba(255,255,255,.8);
- z-index:99999;
- pointer-events:none;
- animation:arcadeRise 1.4s forwards;
-}
-@keyframes arcadeRise{
- 0%{opacity:0;transform:translate(-50%,-10px) scale(.7)}
- 20%{opacity:1}
- 100%{opacity:0;transform:translate(-50%,-120px) scale(1.2)}
-}
-</style>
-<script>
-window.addEventListener('load',()=>{
- const AudioCtx = window.AudioContext || window.webkitAudioContext;
- let ctx;
- function beep(freq,dur,type='square'){
-   try{
-     ctx = ctx || new AudioCtx();
-     const o=ctx.createOscillator();
-     const g=ctx.createGain();
-     o.type=type;
-     o.frequency.value=freq;
-     o.connect(g); g.connect(ctx.destination);
-     g.gain.value=0.04;
-     o.start();
-     g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-     o.stop(ctx.currentTime + dur);
-   }catch(e){}
- }
- function popup(txt){
-   const d=document.createElement('div');
-   d.className='arcade-popup';
-   d.textContent=txt;
-   document.body.appendChild(d);
-   setTimeout(()=>d.remove(),1400);
- }
- document.querySelectorAll('button').forEach(btn=>{
-   btn.addEventListener('click',()=>{
-     const t=(btn.textContent||'').toUpperCase();
-     if(t.includes('TREAT')){
-       beep(880,.08); popup('+50 XP');
-     }else if(t.includes('HUNT')){
-       beep(660,.08); setTimeout(()=>beep(880,.08),80);
-       const r=['🍕 PIZZA!','🐟 FISH!','🍗 CHICKEN!','⭐ BONUS!'];
-       popup(r[Math.floor(Math.random()*r.length)]);
-     }else if(t.includes('RESCUE')){
-       beep(523,.08); setTimeout(()=>beep(659,.08),90); setTimeout(()=>beep(784,.12),180);
-       popup('⭐ NEW CAT!');
-     }
-   });
- });
-});
-</script>
+        </div>
 
-<style>
-.punk-selected{box-shadow:0 0 24px #ff4fd8!important}
-.beach-selected{box-shadow:0 0 24px #39d5ff!important}
-.golf-selected{box-shadow:0 0 24px #59ff6d!important}
-.arcade-reward{
-position:fixed;left:50%;top:45%;
-transform:translate(-50%,-50%);
-font-size:56px;font-weight:900;color:#2b2b2b;
--webkit-text-stroke:3px #111;
-z-index:99999;pointer-events:none;
-animation:rewardRise 1.8s forwards;
-}
-@keyframes rewardRise{
-0%{opacity:0;transform:translate(-50%,-20px) scale(.8)}
-15%{opacity:1}
-100%{opacity:0;transform:translate(-50%,-130px) scale(1.25)}
-}
-</style>
-<script>
-window.addEventListener('load',()=>{
-const AC=window.AudioContext||window.webkitAudioContext;
-let ctx;
-function tone(f,d){
- try{
-  ctx=ctx||new AC();
-  const o=ctx.createOscillator(), g=ctx.createGain();
-  o.type='square'; o.frequency.value=f;
-  o.connect(g); g.connect(ctx.destination);
-  g.gain.value=0.05;
-  o.start();
-  g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+d);
-  o.stop(ctx.currentTime+d);
- }catch(e){}
-}
-function popup(t){
- const d=document.createElement('div');
- d.className='arcade-reward';
- d.textContent=t;
- document.body.appendChild(d);
- setTimeout(()=>d.remove(),1800);
-}
-document.querySelectorAll('button').forEach(btn=>{
- btn.addEventListener('click',()=>{
-  const t=(btn.textContent||'').toUpperCase();
-  if(t.includes('HUNT')){
-   popup(['🍕 PIZZA +120','🐟 FISH +80','🍗 CHICKEN +100','⭐ BONUS +250'][Math.floor(Math.random()*4)]);
-   tone(700,.08); setTimeout(()=>tone(950,.08),80);
-  }
-  if(t.includes('RESCUE')){
-   popup('⭐ NEW CAT!');
-   tone(523,.08); setTimeout(()=>tone(659,.08),80); setTimeout(()=>tone(784,.12),160);
-  }
- });
-});
-document.querySelectorAll('img').forEach(img=>{
- img.addEventListener('click',()=>{
-  document.querySelectorAll('img').forEach(i=>i.classList.remove('punk-selected','beach-selected','golf-selected'));
-  const s=(img.src||'').toLowerCase();
-  if(s.includes('punk')) img.classList.add('punk-selected');
-  else if(s.includes('beach')) img.classList.add('beach-selected');
-  else img.classList.add('golf-selected');
- });
-});
-});
-</script>
+        <div class="cat">
 
-<style>
-.cat-selected-popup{
-position:fixed;left:50%;top:40%;
-transform:translate(-50%,-50%);
-font-size:48px;font-weight:900;
-color:#2b2b2b;-webkit-text-stroke:2px #111;
-z-index:99999;pointer-events:none;
-animation:catsel 1.2s forwards;
-}
-@keyframes catsel{
-0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}
-20%{opacity:1}
-100%{opacity:0;transform:translate(-50%,-120%) scale(1.15)}
-}
-.punk-selected{box-shadow:0 0 30px #ff4fd8!important;border-radius:16px}
-.beach-selected{box-shadow:0 0 30px #39d5ff!important;border-radius:16px}
-.golf-selected{box-shadow:0 0 30px #59ff6d!important;border-radius:16px}
-</style>
-<script>
-window.addEventListener('load',()=>{
- const AC=window.AudioContext||window.webkitAudioContext;
- let ctx;
- function selectTone(freq){
-   try{
-    ctx=ctx||new AC();
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.frequency.value=freq;o.type='triangle';
-    o.connect(g);g.connect(ctx.destination);
-    g.gain.value=0.04;
-    o.start();
-    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.12);
-    o.stop(ctx.currentTime+0.12);
-   }catch(e){}
- }
- function popup(t){
-   const d=document.createElement('div');
-   d.className='cat-selected-popup';
-   d.textContent=t;
-   document.body.appendChild(d);
-   setTimeout(()=>d.remove(),1200);
- }
- document.querySelectorAll('img').forEach(img=>{
-   img.addEventListener('click',()=>{
-      const s=(img.src||'').toLowerCase();
-      if(s.includes('punk')){popup('💜 CAT SELECTED');selectTone(740);}
-      else if(s.includes('beach')){popup('🌊 CAT SELECTED');selectTone(620);}
-      else {popup('💚 CAT SELECTED');selectTone(520);}
-      img.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:300});
-   });
- });
-});
-</script>
+            <img src="frilagdgolfkatt.png">
 
-<style>
-.reward-xp,.reward-loot{
-position:fixed;left:50%;
-transform:translate(-50%,-50%);
-font-weight:900;z-index:99999;pointer-events:none;
--webkit-text-stroke:2px #111;
-}
-.reward-loot{top:42%;font-size:60px;color:#2b2b2b;}
-.reward-xp{top:52%;font-size:44px;color:#7dff3c;}
-@keyframes floatUp{
-0%{opacity:0;transform:translate(-50%,0) scale(.8)}
-15%{opacity:1}
-100%{opacity:0;transform:translate(-50%,-120px) scale(1.2)}
-}
-.reward-loot,.reward-xp{animation:floatUp 1.6s forwards;}
-</style>
-<script>
-window.addEventListener('load',()=>{
- const AC=window.AudioContext||window.webkitAudioContext;
- let ctx;
- function tone(f,d){
-  try{
-   ctx=ctx||new AC();
-   const o=ctx.createOscillator(),g=ctx.createGain();
-   o.type='square'; o.frequency.value=f;
-   o.connect(g); g.connect(ctx.destination);
-   g.gain.value=0.05;
-   o.start();
-   g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+d);
-   o.stop(ctx.currentTime+d);
-  }catch(e){}
- }
- function pop(text,cls,time=1600){
-  const d=document.createElement('div');
-  d.className=cls; d.textContent=text;
-  document.body.appendChild(d);
-  setTimeout(()=>d.remove(),time);
- }
- document.querySelectorAll('button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-   const t=(btn.textContent||'').toUpperCase();
-   if(t.includes('HUNT')){
-    const items=[['🍕 PIZZA',120],['🐟 FISH',80],['🍗 CHICKEN',100],['⭐ BONUS',250]];
-    const r=items[Math.floor(Math.random()*items.length)];
-    pop(r[0],'reward-loot');
-    setTimeout(()=>pop('+'+r[1]+' XP','reward-xp'),250);
-    tone(700,.07); setTimeout(()=>tone(950,.08),80);
-   }
-   if(t.includes('RESCUE')){
-    pop('🎉 NEW CAT!','reward-loot',2000);
-    setTimeout(()=>pop('⭐ ADDED TO SHELTER','reward-xp',1800),300);
-    tone(523,.08); setTimeout(()=>tone(659,.08),90); setTimeout(()=>tone(784,.12),180);
-   }
-  });
- });
-});
-</script>
+            <h3>⛳ Golf Cat</h3>
 
-<script>
-window.addEventListener('load',()=>{
- const playEl=document.getElementById('play');
- const catEl=document.getElementById('cat');
- const nameEl=document.getElementById('name');
+            <p>Lost 482 golf balls.</p>
 
- const shelterImgs=[...document.querySelectorAll('.room img')];
+        </div>
 
- shelterImgs.forEach((img,idx)=>{
-   img.addEventListener('click',()=>{
-     if(idx===0){
-       playEl.style.backgroundImage="url('beachcat.jpg')";
-       catEl.src='frilagdbeachkatt.png';
-       nameEl.textContent='🌴 Beach Cat';
-     }else if(idx===1){
-       playEl.style.backgroundImage="url('punkcat.jpg')";
-       catEl.src='frilagdpunkkatt.png';
-       nameEl.textContent='🛹 Punk Cat';
-     }else if(idx===2){
-       playEl.style.backgroundImage="url('golfcat.jpg')";
-       catEl.src='frilagdgolfkatt.png';
-       nameEl.textContent='⛳ Golf Cat';
-     }
-   });
- });
-});
-</script>
+    </div>
 
-<style>
-#shelter-cards{
-display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:10px;
-}
-.s-card{
-width:180px;padding:10px;border-radius:18px;
-background:rgba(0,0,0,.18);
-border:3px solid rgba(255,255,255,.18);
-text-align:center;cursor:pointer;
-transition:.2s;
-}
-.s-card:hover{transform:translateY(-3px)}
-.s-card.active-beach{box-shadow:0 0 24px #39d5ff}
-.s-card.active-punk{box-shadow:0 0 24px #ff4fd8}
-.s-card.active-golf{box-shadow:0 0 24px #59ff6d}
-.s-title{font-size:22px;font-weight:900}
-.s-fact{margin-top:8px;font-size:14px;font-style:italic}
-</style>
-
-
-
-<style>
-.cat-fact{
-display:block;
-font-size:13px;
-font-style:italic;
-color:rgba(255,255,255,.9);
-margin-top:4px;
-}
-</style>
-<script>
-window.addEventListener('load',()=>{
-  const labels=[...document.querySelectorAll('*')].filter(e=>
-    ['Beach Cat','Punk Cat','Golf Cat'].includes((e.textContent||'').trim())
-  );
-
-  labels.forEach(el=>{
-    if(el.dataset.factAdded) return;
-    el.dataset.factAdded='1';
-
-    const fact=document.createElement('div');
-    fact.className='cat-fact';
-
-    const t=(el.textContent||'').trim();
-    if(t==='Beach Cat') fact.textContent='Eats 12 shrimps a day.';
-    if(t==='Punk Cat') fact.textContent='Owns 4 tiny guitars.';
-    if(t==='Golf Cat') fact.textContent='Lost 482 golf balls.';
-
-    el.parentNode.insertBefore(fact, el.nextSibling);
-  });
-});
-</script>
-
-<style>
-.cat-fact{
-display:block!important;
-font-size:14px!important;
-font-style:italic!important;
-color:rgba(255,255,255,.92)!important;
-margin-top:2px!important;
-text-align:center!important;
-}
-.cat-name-polish{
-font-size:30px!important;
-font-weight:900!important;
-letter-spacing:1px!important;
-text-transform:uppercase!important;
-text-align:center!important;
-margin-top:8px!important;
-}
-</style>
-<script>
-window.addEventListener('load',()=>{
- const names=['Beach Cat','Punk Cat','Golf Cat'];
- [...document.querySelectorAll('*')].forEach(el=>{
-   const t=(el.textContent||'').trim();
-   if(names.includes(t)){
-      el.classList.add('cat-name-polish');
-      const fact=el.nextElementSibling;
-      if(fact && fact.classList.contains('cat-fact')){
-         fact.style.maxWidth='180px';
-         fact.style.margin='2px auto 0 auto';
-      }
-   }
- });
-});
-</script>
-
-<style>
-.locked-cats-panel{
-margin-top:12px;padding:10px;border-radius:16px;
-background:rgba(0,0,0,.15);
-}
-.locked-title{
-font-size:22px;font-weight:900;margin-bottom:8px;
-}
-.locked-cat{
-display:inline-block;
-margin:4px;padding:8px 12px;
-border-radius:12px;
-background:rgba(255,255,255,.12);
-}
-</style>
-
-
-<style>
-.locked-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-.locked-card{padding:12px;border-radius:16px;background:rgba(255,255,255,.12);text-align:center;font-weight:700}
-.locked-card.epic{box-shadow:0 0 12px rgba(180,80,255,.45)}
-.locked-card.rare{box-shadow:0 0 12px rgba(80,160,255,.35)}
-.locked-rarity{font-size:12px;opacity:.9}
-</style>
-<div class="locked-cats-panel">
-<div class="locked-title">
-<style>
-.locked-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.locked-card{background:rgba(255,255,255,.15);padding:10px;border-radius:18px;text-align:center}
-.locked-card img{width:120px;height:120px;object-fit:contain}
-.epic{box-shadow:0 0 14px rgba(180,80,255,.45)}
-.rare{box-shadow:0 0 14px rgba(80,160,255,.35)}
-</style>
-<div class="locked-title">
-<div id="next-unlock-panel" style="margin:20px;padding:16px;border-radius:18px;background:rgba(255,255,255,.12);color:#2b2b2b">
-<h3> 📰 SHELTER NEWS<br><small>CORAL TRAIL • Strange little footprints lead from the lagoon toward the old dunes.</small><br><small>SECRET LAGOON • Tiny glowing fish gathered where the shell trail ends.</small><br><small>LOST LIGHTHOUSE • A distant lantern flickered across the bay just before sunrise.</small><br><small>TREASURE TIDE • The old map points toward a hidden beach where Desert Dave was last seen.</small><br><small>STARFISH SIGNAL • A curious starfish appeared beside the old shell trail.</small><br><small>MOONLIT PIER • A friendly seagull dropped an old treasure map near the shelter.</small><br><small>HIDDEN COVE • Beach Cat discovered a tiny cave filled with shiny shells.</small><br><small>SEASIDE POSTCARD • A tiny crab delivered a mysterious message for Beach Cat.</small><br><small>TIDE REPORT • A colorful shell washed ashore near the cat shelter.</small><br><small>SUNRISE WATCH • Golf Cat spotted tiny pawprints by the shoreline.</small><br><small>BEACH BONFIRE • The shelter cats found a glowing shell by the old pier.</small><br><small>NIGHT PATROL • Punk Cat and Beach Cat are guarding the treats stash.</small><br><small>SHELTER RADIO • Beach Cat says the seashells are humming tonight.</small><br><small>DESERT WHISPERS • Someone spotted Desert Dave beyond the dunes...</small><br><small>SHELTER DISCOVERY • A mysterious pawprint was found near the dunes.</small><br><small>ACTIVE CAT<br><small>ACTIVE CAT PERK • +5% Lucky Finds • Favorite Item: Lucky Shell 🐚</small> BONUS • Beach Cat found a shiny shell.</small><br><small>SHELTER SPOTLIGHT • Punk Cat started a tiny garage band.</small><br><small>TODAY'S SHELTER TIP • Treats make shy cats curious.</small><br><small>Beach Cat stole another golf ball.</small><br>😺 Shelter Mood: Cozy & Happy • 3 cats rescued today • Shelter visitors: 12 • New arrivals this week: 1 • Next rescue in: Soon™<br>🌵 NEXT UNLOCK<br><small>MYSTERY TRACKER • 3 strange clues have been found.</small><br><small>DESERT DAVE SILHOUETTE ? • A lonely figure waits beyond the dunes...</small><br><small>DESERT DAVE PREVIEW • World Preview: 🐠 Aquarium AI • 🌋 Volcano Vince • 🌵 A mysterious desert wanderer is almost here...</small></h3>
-<div><strong>🌵 Desert Dave</strong></div>
-<div>247 / 300 Rescues</div>
-<div style="height:12px;background:#333;border-radius:999px;overflow:hidden;margin:8px 0">
-<div style="width:82%;height:100%;background:#ffd54f"></div>
-</div>
-<div>53 rescues remaining</div>
 </div>
 
-<div style="margin:15px 0;padding:12px;border-radius:14px;background:rgba(255,255,255,.12)">
-<b> Collection Progress</b><br>
-3 / 12 
-<div style="height:10px;background:#333;border-radius:999px;overflow:hidden;margin-top:6px">
-<div style="width:25%;height:100%;background:#ffd400"></div>
-</div>
-</div>
- LOCKED CATS  COLLECTION<br><small>🔮 Coming soon: 🐠 Aquarium Al • 🌋 Volcano Vince • 🌵 Desert Dave</small></div>
-<div class="locked-grid">
-<div class="locked-card epic"><img src="cats/wincent.jpg"><div>WINCENT</div><small><span class="rarity-badge rarity-epic">🟣 EPIC</span><br>🔒 LOCKED<br>Rescue 25 Cats<div class="lore">Leader of the alley cats.</div></small></div>
-<div class="locked-card epic"><img src="cats/conspiricy.jpg"><div>CONSPIRACY CLAWS</div><small><span class="rarity-badge rarity-epic">🟣 EPIC</span><br>🔒 LOCKED<br>Rescue 25 Cats<div class="lore">Leader of the alley cats.</div></small></div>
-<div class="locked-card rare"><img src="cats/buffmuffin.PNG"><div>BUFF MUFFIN</div><small><span class="rarity-badge rarity-rare">🔵 RARE</span><br>🔒 LOCKED<br>Feed 500 Treats<div class="lore">A local shelter legend.</div></small></div>
-<div class="locked-card rare"><img src="cats/captaincatfish.PNG"><div>CAPTAIN CATFISH</div><small><span class="rarity-badge rarity-rare">🔵 RARE</span><br>🔒 LOCKED<br>Feed 500 Treats<div class="lore">A local shelter legend.</div></small></div>
-<div class="locked-card rare"><img src="cats/waweywalter.PNG"><div>WAVEY WALTER</div><small><span class="rarity-badge rarity-rare">🔵 RARE</span><br>🔒 LOCKED<br>Feed 500 Treats<div class="lore">A local shelter legend.</div></small></div>
-<div class="locked-card rare"><img src="cats/radrufus.PNG"><div>RAD RUFUS</div><small><span class="rarity-badge rarity-rare">🔵 RARE</span><br>🔒 LOCKED<br>Feed 500 Treats<div class="lore">A local shelter legend.</div></small></div>
-</div>
+<div class="card">
+
+    <h2>📰 Shelter News</h2>
+
+    <p>🌊 Strange little footprints lead from the lagoon toward the old dunes.</p>
+
+    <p>🐠 Tiny glowing fish gathered where the shell trail ends.</p>
+
+    <p>🌵 Someone spotted Desert Dave beyond the dunes...</p>
+
 </div>
 
+<div class="card">
 
-<script id="gosnuggiez-save-system">
-document.addEventListener('DOMContentLoaded',()=>{
-  const state = JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
-  state.rescues = state.rescues || 247;
-  state.treats = state.treats || 431;
-  state.level = state.level || 282;
-  localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
+    <h2>🌵 Next Unlock</h2>
 
+    <p><b>Desert Dave</b></p>
 
-<script id="gosnuggiez-buildpass2">
-document.addEventListener('DOMContentLoaded',()=>{
- let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
+    <p>247 / 300 rescues</p>
 
- state.activeCat=state.activeCat||'Punk Cat';
- state.unlockedCats=state.unlockedCats||3;
+    <p>53 rescues remaining.</p>
 
- if((state.rescues||247)>=300 && !state.desertDaveUnlocked){
-   state.desertDaveUnlocked=true;
-   alert('🎉 NEW CAT UNLOCKED!\n🌵 DESERT DAVE');
- }
- localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
-
-
-<style id="rc1-stats-cards">
-.stats-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin:16px;
-}
-.stat-card{
-background:#14365c;
-color:#2b2b2b;
-padding:12px;
-border-radius:16px;
-text-align:center;
-font-weight:bold;
-}
-</style>
-<div class="stats-grid">
-<div class="stat-card">🏆<br>247<br>Rescues</div>
-<div class="stat-card">🍖<br>431<br>Treats</div>
-<div class="stat-card">🐱<br>3/12<br>Cats</div>
-<div class="stat-card">⭐<br>2<br>Badges</div>
 </div>
 
+<div class="card stats">
 
-<div style="margin:16px;padding:12px;border-radius:16px;background:#14365c;color:#2b2b2b">
-<h3> 🏆 ACHIEVEMENTS<br><small>COLLECTOR BONUS • Find 10 shiny shells.</small><br><small>FIRST BADGE • Shell Scout 🐚</small></h3>
-<p>☑ Feed 100 Treats</p>
-<p>☑ Rescue 100 Cats</p>
-<p>☐ Unlock Desert Dave</p>
-<p>☐ Reach Level 5</p>
+    <div>
+
+        <h2>🏆</h2>
+
+        <p>247<br>Rescues</p>
+
+    </div>
+
+    <div>
+
+        <h2>🍖</h2>
+
+        <p>431<br>Treats</p>
+
+    </div>
+
+    <div>
+
+        <h2>🐱</h2>
+
+        <p>3 / 12<br>Cats</p>
+
+    </div>
+
+    <div>
+
+        <h2>⭐</h2>
+
+        <p>2<br>Badges</p>
+
+    </div>
+
 </div>
 
-<div style="margin:16px;padding:12px;border-radius:16px;background:#14365c;color:#2b2b2b">
-<h3> 🔥 DAILY STREAK</h3>
-<p>Day 1 ✓ Day 2 ✓ Day 3 ✓</p>
-<p>Current Streak: 3</p>
-</div>
+</body>
 
-<script id="rc1-buildpass4">
-document.addEventListener('DOMContentLoaded',()=>{
- let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
- state.activeCat=state.activeCat||'Punk Cat';
- state.rescues=state.rescues||247;
- if(state.rescues>=300){state.desertDaveUnlocked=true;}
- localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
-
-<style id="rc1-buildpass5">
-.active-cat-card{
-margin:16px;
-padding:16px;
-border-radius:18px;
-background:#14365c;
-color:#2b2b2b;
-border:3px solid #ffd400;
-box-shadow:0 0 18px rgba(255,212,0,.4);
-}
-</style>
-
-<div class="active-cat-card">
- ACTIVE CAT<br>
-<strong>PUNK CAT</strong><br>
-+10% Treat Bonus
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
- state.activeCat=state.activeCat||'Punk Cat';
-
- if(state.desertDaveUnlocked){
-   console.log('Desert Dave unlocked');
- }
- localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
-
-
-<style id="buildpass6-unlock">
-#desertDavePopup{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center}
-#desertDavePopup .box{background:#14365c;color:#2b2b2b;padding:24px;border-radius:20px;text-align:center;border:3px solid #ffd400;max-width:320px}
-#desertDavePopup button{padding:10px 18px;border-radius:12px;border:none;font-weight:bold}
-</style>
-<div id="desertDavePopup">
- <div class="box">
-  <h2>🎉 NEW CAT UNLOCKED!</h2>
-  <h3>🌵 DESERT DAVE</h3>
-  <p>+15% Rescue Bonus</p>
-  <button onclick="document.getElementById('desertDavePopup').style.display='none'">AWESOME!</button>
- </div>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
- if((state.rescues||247)>=300 && !state.desertDaveCelebrated){
-   state.desertDaveUnlocked=true;
-   state.desertDaveCelebrated=true;
-   document.getElementById('desertDavePopup').style.display='flex';
- }
- localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
-
-
-<script id="buildpass8-desert-dave">
-document.addEventListener('DOMContentLoaded',()=>{
- let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
- state.rescues=state.rescues||247;
-
- if(state.rescues>=300 && !state.desertDaveCelebrated){
-   state.desertDaveUnlocked=true;
-   state.unlockedCats=(state.unlockedCats||3)+1;
-   state.desertDaveCelebrated=true;
-   alert('🎉 NEW CAT UNLOCKED!\n🌵 DESERT DAVE');
- }
- localStorage.setItem('gosnuggiez',JSON.stringify(state));
-});
-</script>
-
-
-<div id="buildpass20-desert" style="margin:16px auto;max-width:760px;padding:12px 16px;border-radius:18px;background:rgba(255,255,255,.08);color:#f4f4f4;font-family:sans-serif">
-<strong>DESERT DAVE</strong> — Coming soon! Reach 300 rescues to unlock.
-</div>
-
-
-
-
-<!-- BUILDPASS24 : Cleanup sprint -->
-
-<!-- BUILDPASS28 : Tropical polish checkpoint -->
-
-<!-- BUILDPASS29 : Stable checkpoint -->
-
-<!-- BUILDPASS30 : Living Shelter checkpoint -->
-
-<!-- BUILDPASS31 : Desert Dave Preview checkpoint -->
-
-<!-- BUILDPASS32 : Unlock World checkpoint -->
-
-<!-- BUILDPASS33 : Locked Cats Refresh checkpoint -->
-
-<!-- BUILDPASS34 : Shelter News checkpoint -->
-
-<!-- BUILDPASS35 : Shelter Tip checkpoint -->
-
-<!-- BUILDPASS36 : Shelter Spotlight checkpoint -->
-
-<!-- BUILDPASS37 : Active Cat Bonus checkpoint -->
-
-<!-- BUILDPASS38 : Shelter Discovery checkpoint -->
-
-<!-- BUILDPASS39 : Desert Whispers checkpoint -->
-
-<!-- BUILDPASS40 : Shelter Radio checkpoint -->
-
-<!-- BUILDPASS41 : Night Patrol checkpoint -->
-
-<!-- BUILDPASS42 : Beach Bonfire checkpoint -->
-
-<!-- BUILDPASS43 : Sunrise Watch checkpoint -->
-
-<!-- BUILDPASS44 : Tide Report checkpoint -->
-
-<!-- BUILDPASS45 : Seaside Postcard checkpoint -->
-
-<!-- BUILDPASS46 : Hidden Cove checkpoint -->
-
-<!-- BUILDPASS47 : Moonlit Pier checkpoint -->
-
-<!-- BUILDPASS48 : Starfish Signal checkpoint -->
-
-<!-- BUILDPASS49 : Treasure Tide checkpoint -->
-
-<!-- BUILDPASS50 : Lost Lighthouse checkpoint -->
-
-<!-- BUILDPASS51 : Secret Lagoon checkpoint -->
-
-<!-- BUILDPASS52 : Coral Trail checkpoint -->
-
-<!-- BUILDPASS53 : World Details checkpoint -->
-
-<!-- BUILDPASS54 : Mystery Tracker checkpoint -->
-
-<!-- BUILDPASS55 : Visual Polish checkpoint -->
-
-<!-- BUILDPASS56 : Mobile Cleanup -->
-<!-- TODO: Shelter News should rotate one item at a time on mobile. -->
-<!-- TODO: Active Cat gets one extra perk line only. -->
-<!-- TODO: Keep Locked Cats as the main progression hook. -->
-
-<!-- BUILDPASS57 : Unlock Polish -->
-<!-- Mobile-first: rotate Shelter News instead of stacking. -->
-<!-- Active Cat: one flavor line (Favorite Item / Mood). -->
-<!-- Desert Dave: prepare for silhouette + ??? reveal. -->
-<!-- Locked Cats Collection remains the main progression showcase. -->
-
-<!-- BUILDPASS58 : Mobile UX -->
-<!-- PRIORITY: one-line rotating Shelter News. -->
-<!-- PRIORITY: Desert Dave silhouette card. -->
-<!-- PRIORITY: Active Cat favorite item / mood. -->
-<!-- PRIORITY: keep hero screen visible without excessive scrolling. -->
-
-<!-- BUILDPASS61 : APP NOT WEBSITE
-TODO:
-1. Remove large GO SNUGGIEZ title block.
-2. Let hero image start directly under mobile status bar.
-3. Prioritize Hero -> XP -> GIVE TREAT.
-4. Replace long Shelter News with rotating single-line card.
-5. Reserve small overlay logo area on hero image.
--->
-
-
-<!-- BuildPass62: Removed large title / App-first layout -->
-
-<!-- BUILDPASS64 : Mobile Polish -->
-<!-- Next goals: compact Shelter News, improve Active Cat card, prepare smoother carousel and tighter mobile spacing. -->
-
-<!-- BUILDPASS65 : UI Cleanup -->
-<!-- Priority: compact Shelter News, polish Active Cat card, reduce mobile clutter, prepare simple micro-animations. -->
-
-<!-- BUILDPASS66 : Shelter News Refresh -->
-<!-- Goal: one visible news card, rotate messages instead of stacking. -->
-<!-- Keep mobile layout compact and preserve Hero-first design. -->
-
-<!-- BUILDPASS67 : Active Cat Upgrade -->
-<!-- Add small avatar slot for active cat. -->
-<!-- Add one flavor line: Favorite Item: Lucky Shell. -->
-<!-- Add one optional mood line: Mood: Chilling. -->
-<!-- Keep card compact and mobile friendly. -->
-
-<!-- BUILDPASS68 : Carousel Polish -->
-<!-- Goal: smoother Shelter Cats swipe experience. -->
-<!-- Keep active card centered and prevent adjacent cards from peeking awkwardly. -->
-<!-- Prepare subtle slide animation and cleaner mobile spacing. -->
-
-<!-- BUILDPASS69 : Micro Animations -->
-<!-- Prepare subtle button pop for GIVE TREAT. -->
-<!-- Prepare smooth XP bar transition animation. -->
-<!-- Prepare small achievement glow and card hover effect. -->
-<!-- Keep all effects lightweight and mobile friendly. -->
-
-<!-- BUILDPASS70 : Visual Polish & Juice -->
-<!-- Add button press animation to GIVE TREAT -->
-<!-- Add floating PURR-FECT TREAT feedback animation -->
-<!-- Add smooth XP progress transition -->
-<!-- Compact Shelter News with Read More -->
-<!-- Extend Active Cat card with avatar + mood + favorite item -->
-
-
-<!-- BUILDPASS71 : Home Screen Cleanup -->
-<!-- Remove or collapse 60-70% of large blue info panels. -->
-<!-- Keep Hero + Action Buttons + Shelter Cats as primary focus. -->
-<!-- Compact Achievements / Daily Streak / Shelter News into mini cards. -->
-<!-- Desert Dave becomes a single compact unlock card. -->
-<!-- Prepare Collection & Lore section for separate screen/tab. -->
-</body></html>
-
-<!-- V105 decorations placeholder -->
-
-<style id="rc1-tropical-pass">
-.shelter{
-background:linear-gradient(135deg,#1F7A45 0%, #4CAF50 100%) !important;
-position:relative;
-overflow:hidden;
-}
-.shelter:before{
-content:"🌴";
-position:absolute;
-top:10px;
-left:14px;
-font-size:28px;
-opacity:.8;
-}
-.shelter:after{
-content:"🐚 🌺 🍄";
-position:absolute;
-bottom:10px;
-right:14px;
-font-size:20px;
-opacity:.7;
-}
-</style>
-
-
-
-<style>
-.shelter{position:relative;background:linear-gradient(135deg,#1F6B3E,#3F9D57,#D9851F)!important}
-.sandy{background:#F3E7C9!important;color:#222;padding:14px;border-radius:22px;min-width:260px;margin:10px}
-.shelter:before{content:' ';position:absolute;top:10px;left:10px;width:90px;height:90px;background:rgba(255,255,255,.08);border-radius:0 0 90px 0}
-.shelter:after{content:' ';position:absolute;bottom:10px;right:10px;width:70px;height:70px;background:rgba(255,220,170,.18);border-radius:50%}
-</style>
-
-<!-- BUILDPASS76 : Compact widget bar added -->
+</html>
