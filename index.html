@@ -430,7 +430,10 @@ render();
 function rescueCat(){
 xp+=50; cats++;
 localStorage.gsxp=xp; localStorage.gscats=cats;
-scene('beachcat.jpg','frilagdbeachkatt.png','🌴 Beach Cat','NEW RESCUE CAT!','#4fd5ff');
+let state = JSON.parse(localStorage.getItem('gosnuggiez') || '{}');
+state.activeCat = 'Beach Cat';
+localStorage.setItem('gosnuggiez', JSON.stringify(state)); 
+ scene('beachcat.jpg','frilagdbeachkatt.png','🌴 Beach Cat','NEW RESCUE CAT!','#4fd5ff');
 render();
 }
 render();
