@@ -1070,7 +1070,30 @@ box-shadow:0 0 18px rgba(255,212,0,.4);
 document.addEventListener('DOMContentLoaded',()=>{
  let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
  state.activeCat=state.activeCat||'Punk Cat';
+const activeCats = {
+  "Beach Cat": {
+    bonus: "+5% Shell Finds",
+    love: "🐚 Loves: Shiny Shells",
+    mood: "😴 Mood: Relaxing"
+  },
+  "Punk Cat": {
+    bonus: "+10% Treat Bonus",
+    love: "🎸 Loves: Tiny Guitar",
+    mood: "😎 Mood: Chilling"
+  },
+  "Golf Cat": {
+    bonus: "+5% Lucky Finds",
+    love: "⛳ Loves: Lost Golf Balls",
+    mood: "🏌️ Mood: Focused"
+  }
+};
 
+const cat = activeCats[state.activeCat] || activeCats["Punk Cat"];
+
+document.getElementById("activeCatName").textContent = state.activeCat.toUpperCase();
+document.getElementById("activeCatBonus").textContent = cat.bonus;
+document.getElementById("activeCatLove").textContent = cat.love;
+document.getElementById("activeCatMood").textContent = cat.mood;
  if(state.desertDaveUnlocked){
    console.log('Desert Dave unlocked');
  }
