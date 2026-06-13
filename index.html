@@ -1063,10 +1063,10 @@ box-shadow:0 0 18px rgba(255,212,0,.4);
 
 <div class="active-cat-card">
 🐈 ACTIVE CAT<br>
-<strong>PUNK CAT</strong><br>
-+10% Treat Bonus<br>
-<small>🎸 Loves: Tiny Guitar</small><br>
-<small>😎 Mood: Chilling</small>
+<strong id="activeCatName">PUNK CAT</strong><br>
+<span id="activeCatBonus">+10% Treat Bonus</span><br>
+<small id="activeCatLove">🎸 Loves: Tiny Guitar</small><br>
+<small id="activeCatMood">😎 Mood: Chilling</small>
 </div>
 
 <script>
@@ -1342,11 +1342,29 @@ opacity:.7;
 
 
 
-<style>
-.shelter{position:relative;background:linear-gradient(135deg,#1F6B3E,#3F9D57,#D9851F)!important}
-.sandy{background:#F3E7C9!important;color:#f5f5f5;;padding:14px;border-radius:22px;min-width:260px;margin:10px}
-.shelter:before{content:' ';position:absolute;top:10px;left:10px;width:90px;height:90px;background:rgba(255,255,255,.08);border-radius:0 0 90px 0}
-.shelter:after{content:' ';position:absolute;bottom:10px;right:10px;width:70px;height:70px;background:rgba(255,220,170,.18);border-radius:50%}
-</style>
+shelterImgs.forEach((img,idx)=>{
+  img.addEventListener('click',()=>{
+    let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
 
+    if(idx===0){
+      playEl.style.backgroundImage="url('beachcat.jpg')";
+      catEl.src='frilagdbeachkatt.png';
+      nameEl.textContent='🌴 Beach Cat';
+      state.activeCat='Beach Cat';
+    }else if(idx===1){
+      playEl.style.backgroundImage="url('punkcat.jpg')";
+      catEl.src='frilagdpunkkatt.png';
+      nameEl.textContent='🛹 Punk Cat';
+      state.activeCat='Punk Cat';
+    }else if(idx===2){
+      playEl.style.backgroundImage="url('golfcat.jpg')";
+      catEl.src='frilagdgolfkatt.png';
+      nameEl.textContent='⛳ Golf Cat';
+      state.activeCat='Golf Cat';
+    }
+
+    localStorage.setItem('gosnuggiez', JSON.stringify(state));
+    location.reload(); // uppdaterar Active Cat-kortet
+  });
+});
 <!-- BUILDPASS76 : Compact widget bar added -->
