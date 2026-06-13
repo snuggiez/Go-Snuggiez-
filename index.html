@@ -1284,7 +1284,35 @@ TODO:
 <!-- Compact Achievements / Daily Streak / Shelter News into mini cards. -->
 <!-- Desert Dave becomes a single compact unlock card. -->
 <!-- Prepare Collection & Lore section for separate screen/tab. -->
-</body></html>
+<script>
+window.addEventListener('load',()=>{
+
+  function seagullPopup(){
+    const d=document.createElement('div');
+    d.className='arcade-reward';
+    d.textContent='🐦 SEAGULL STEVE STOLE YOUR FISH!';
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),2200);
+  }
+
+  document.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const txt=(btn.textContent||'').toUpperCase();
+
+      // 15% chans när man trycker FOOD HUNT
+      if(txt.includes('HUNT') && Math.random()<0.15){
+        seagullPopup();
+
+        // Spara statistik
+        let state=JSON.parse(localStorage.getItem('gosnuggiez')||'{}');
+        state.seagullEncounters=(state.seagullEncounters||0)+1;
+        localStorage.setItem('gosnuggiez',JSON.stringify(state));
+      }
+    });
+  });
+
+});
+</script></body></html>
 
 <!-- V105 decorations placeholder -->
 
