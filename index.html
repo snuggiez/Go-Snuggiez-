@@ -1090,7 +1090,7 @@ function playSteveSound(){
 function steveFlyby(){
  playSteveSound();
  const fly=document.createElement('img');
- fly.src='world/assets/seagullsteve.png';
+ fly.src='assets/seagullsteve.png';
  fly.style.cssText='position:fixed;left:-180px;top:'+ (120+Math.random()*220) +'px;width:320px;z-index:99999;pointer-events:none;transition:4s linear';
  document.body.appendChild(fly);
  setTimeout(()=>{fly.style.left='110vw';},50);
