@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Hidden Lagoon - Demo Candidate BUILD955</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(180deg,#04111d,#0a2238 55%,#081a2c);color:#fff;overflow-y:auto;min-height:100vh}
+nav{display:flex;position:sticky;top:0;background:#111;z-index:100}
+nav button{flex:1;padding:8px;border:0;background:#111;color:#ffd400;cursor:pointer;transition:.15s}
+nav button:hover{background:#222}
+button{background:linear-gradient(180deg,#ffd400,#e6b800);color:#000;border:none;border-radius:16px;padding:12px;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.3);transition:.15s;cursor:pointer}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.4)}
+button:active{transform:translateY(2px)}
+.tab{display:none;padding:12px}.active{display:block}
+.card{background:#14365c;border-radius:16px;padding:10px;margin:8px 0;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:.25s}
+.card:hover{transform:translateY(-2px)}
+.heroCard{background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.35));border-radius:22px;padding:10px;box-shadow:0 12px 35px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.heroStats{display:flex;gap:8px}.heroStats .card{flex:1;text-align:center}
+.catrow{display:flex;gap:10px;flex-wrap:wrap}
+.cat{flex:1;min-width:220px;background:#0f2844;padding:10px;border-radius:12px;cursor:pointer;transition:all .25s ease}
+.cat:hover{transform:translateY(-3px)}
+.cat img{width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:6px}
+.heroImg{width:100%;height:420px;object-fit:cover;object-position:center top;border-radius:18px;margin-bottom:6px;background:#0b2038;display:block;box-shadow:0 0 20px rgba(0,0,0,.5)}
+.posterGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.posterCard{background:#102844;border-radius:18px;overflow:hidden;cursor:pointer;transition:.25s}
+.posterCard:hover{transform:translateY(-6px) scale(1.02)}
+.posterCard img{width:100%;height:220px;object-fit:cover;display:block}
+.posterCard h3{margin:10px;padding:0}
+.exploreGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.exploreMini{background:#102844;border-radius:16px;padding:14px;font-weight:700;text-align:center;cursor:pointer}
+.albumGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.legendCard{border-radius:22px;padding:12px;color:#fff;min-height:260px;box-shadow:0 10px 30px rgba(0,0,0,.45);position:relative;overflow:hidden;transition:.25s}
+.legendCard:hover{transform:translateY(-6px) rotate(-1deg)}
+.legendCard .art{height:140px;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:72px;background:rgba(255,255,255,.12)}
+.legendary{background:linear-gradient(180deg,#8a6a00,#3d2d00);border:3px solid gold}
+.epic{background:linear-gradient(180deg,#5a2b7a,#251136);border:3px solid #d07cff}
+.rare{background:linear-gradient(180deg,#12507a,#0a2740);border:3px solid #7ec8ff}
+.rarity{font-weight:900;letter-spacing:1px}
+.cardNo{opacity:.8;font-size:12px}
+.flavor{opacity:.95;font-style:italic}
+.characterRibbon{position:absolute;left:10px;top:10px;background:#111;color:#ffd400;padding:6px 10px;border-radius:999px;font-weight:700;font-size:11px;letter-spacing:1px}
+.newBadge{position:absolute;top:12px;right:12px;background:#ff3b30;color:#fff;padding:4px 8px;border-radius:999px;font-weight:bold}
+#activeTitle{font-size:28px;font-weight:800;text-transform:uppercase}
+.sel{outline:3px solid #ffd400;transform:scale(1.05);box-shadow:0 0 20px rgba(255,212,0,.8)}
+#xpPop{position:fixed;left:50%;top:120px;transform:translateX(-50%);background:#ffd400;color:#000;padding:8px 12px;border-radius:12px;font-weight:bold;z-index:9999;animation:fadeUp 1s forwards}
+@keyframes fadeUp{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-40px)}}
+#activeMascot{position:fixed;left:260px;bottom:90px;width:220px;z-index:9999;pointer-events:none;animation:floatCat 4s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+@keyframes floatCat{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+#steveCardOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100000;align-items:center;justify-content:center;flex-direction:column}
+#steveCard{background:#14365c;border:3px solid #ffd400;border-radius:22px;max-width:360px;width:90%;padding:18px;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:popIn .2s ease}
+#steveCard img{width:100%;border-radius:14px}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#steveSpeech{position:fixed;display:none;max-width:240px;background:#fff;color:#111;padding:10px 14px;border-radius:16px;border:3px solid #ffd400;z-index:100001;font-weight:bold;box-shadow:0 8px 20px rgba(0,0,0,.4);backdrop-filter:blur(6px)}
+#steveSprite{position:fixed;width:190px;height:auto;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transform-origin:center;transition:transform .18s ease,filter .18s ease;z-index:9500}
+#steveShadow{position:absolute;width:56px;height:18px;background:rgba(0,0,0,.25);border-radius:50%;filter:blur(3px)}
+#lagoonToast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:rgba(8,24,38,.96);color:#fff;border:2px solid #ffd400;border-radius:18px;padding:14px 20px;z-index:999999;display:none;box-shadow:0 10px 35px rgba(0,0,0,.45)}
+#dailyDiscovery{background:linear-gradient(180deg,#0f3558,#163f69);border:2px solid #5fc8ff;border-radius:18px;padding:14px;margin:12px 0}
+#packFx{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);z-index:9999999;flex-direction:column}
+#packFx .pack{font-size:120px;animation:shake .25s infinite}
+#packFx .msg{font-size:34px;color:#ffd400;font-weight:bold}
+@keyframes shake{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+#pocketRadarBtn{position:fixed;right:18px;bottom:18px;z-index:999999;width:92px;height:92px;border-radius:50%;font-size:28px;font-weight:900;box-shadow:0 0 25px rgba(255,212,0,.8);animation:radarPulse 2s infinite}
+@keyframes radarPulse{50%{transform:scale(1.08)}}
+.portraitSteve{background:url('oldpier/evening-pier.webp') center/cover}
+.portraitSam{background:url('lostlighthouse/lost-lighthouse-hero.webp') center/cover}
+.portraitBandit{background:url('punkdunes/antenna-field.webp') center/cover}
+.portraitKrabbe{background:url('hiddencove/hidden-cove-hero.webp') center/cover}
+#lagoonClock{position:fixed;left:14px;top:74px;z-index:999999;background:rgba(8,24,38,.85);border:2px solid #ffd400;border-radius:14px;padding:8px 12px;font-weight:bold;backdrop-filter:blur(4px)}
+#fishLayer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.lagoonFish{position:absolute;font-size:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));animation:swimAcross linear forwards}
+@keyframes swimAcross{0%{transform:translateX(-80px) translateY(0) scaleX(1)}48%{transform:translateX(50vw) translateY(-12px)}52%{transform:translateX(50vw) translateY(-12px) scaleX(-1)}100%{transform:translateX(-80px) translateY(8px) scaleX(-1)}}
+.waterBubble{position:fixed;bottom:-120px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.12));box-shadow:0 0 20px rgba(180,220,255,.45);animation:lagoonRise linear forwards}
+@keyframes lagoonRise{0%{transform:translateY(0);opacity:0}10%{opacity:.85}100%{transform:translateY(-120vh);opacity:0}}
+.firefly{position:fixed;font-size:10px;pointer-events:none;z-index:4;animation:fireflyFloat 10s linear infinite}
+@keyframes fireflyFloat{0%{transform:translate(0,0)}100%{transform:translate(20px,-120px);opacity:0}}
+.crab{position:fixed;bottom:18px;font-size:26px;z-index:3;pointer-events:none;animation:crabWalk 30s linear infinite}
+@keyframes crabWalk{from{left:-40px}to{left:105vw}}
+.npcToast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#102844;color:#fff;padding:12px 18px;border:2px solid #ffd400;border-radius:14px;z-index:999999;display:none}
+#introOverlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:99999999;transition:opacity 1.5s ease}
+#introLogo{font:900 54px Arial;color:#f5d36a;letter-spacing:4px;text-shadow:0 0 30px rgba(255,212,0,.5);opacity:0;transform:scale(.9);animation:introLogo 2.5s forwards .6s}
+#introSub{margin-top:18px;color:#cfd8dc;opacity:0;animation:introFade 2s forwards 1.8s}
+#introFog{position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,rgba(80,140,180,.25),transparent 60%),linear-gradient(#000,#0b2238);animation:fogDrift 8s linear infinite}
+@keyframes introLogo{to{opacity:1;transform:scale(1)}}
+@keyframes introFade{to{opacity:.9}}
+@keyframes fogDrift{0%{transform:translateX(-2%)}50%{transform:translateX(2%)}100%{transform:translateX(-2%)}}
+#introSteve{position:absolute;top:22%;left:-240px;font-size:120px;animation:steveFly 4.2s linear forwards .8s;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
+@keyframes steveFly{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 420px))}}
+</style>
+</head>
+<body>
+
+<div id="build700badge" style="position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:1000002;background:#0b2238;color:#ffd400;padding:8px 16px;border:2px solid #ffd400;border-radius:20px;font-weight:bold">BUILD955 OPTIMIZED</div>
+
+<div id="steveLayer"></div>
+<div id="steveSpeech"></div>
+
+<div id="steveCardOverlay" onclick="if(event.target===this)this.style.display='none'">
+<div id="steveCard">
+<h2>🐦 Seagull Steve</h2>
+<img src="world/assets/seagullsteve.png"/>
+<p><b>Plats:</b> <span id="steveCardPlace">Old Pier</span></p>
+<p>🍟 Professionell snackstjuv.</p>
+<button onclick="document.getElementById('steveCardOverlay').style.display='none'">Stäng</button>
+</div>
+</div>
+
+<div id="packFx"><div class="pack">📦</div><div class="msg">RIPPING PACK...</div></div>
+<img id="activeMascot" src="cats/frilagdgolfkatt.png"/>
+
+<nav>
+<button onclick="Game.get('ui').showTab('home')">🏠</button>
+<button onclick="Game.get('ui').showTab('cats')">CATS</button>
+<button onclick="Game.get('ui').showTab('collection')">BACKSNACK</button>
+<button onclick="Game.get('ui').showTab('explore')">EXPLORE</button>
+<button onclick="Game.get('ui').showTab('radio')">RADIO</button>
+<button onclick="Game.get('ui').showTab('journal')">JOURNAL</button>
+</nav>
+
+<div class="tab active" id="home">
+<div class="heroCard"><img class="heroImg" id="heroImg" src="cats/golfcat.jpg"/>
+<div style="position:absolute;left:20px;right:20px;bottom:20px;background:rgba(0,0,0,.68);padding:14px;border-radius:20px;backdrop-filter:blur(4px)">
+<div id="heroOverlayName" style="font-size:28px;font-weight:900;letter-spacing:1px">GOLF CAT</div>
+<div>LEVEL <span id="heroLevel">1</span></div>
+<div>RESCUES <span id="heroRescues">0</span></div>
+</div>
+<div id="heroCat" style="display:none">🐱</div>
+</div>
+
+<div style="display:flex;gap:4px">
+<button onclick="Game.get('player').addXP(10)" style="flex:1">🍟 Treat</button>
+<button onclick="Game.get('player').addXP(25)" style="flex:1">🦐 Hunt</button>
+<button onclick="Game.get('player').rescue();Game.get('player').addXP(50)" style="flex:1">🐱 Rescue</button>
+</div>
+
+<div class="card" style="background:linear-gradient(180deg,#355c2d,#4f7d3a)">
+<h3>🌼 MIDSUMMER EVENT</h3>
+<div>Collect 🌼 Flower Crowns, 🐟 Herring and 🍓 Summer Treats.</div>
+</div>
+
+<div id="dailyDiscovery">
+<h3>🌊 DAILY DISCOVERY</h3>
+<div id="dailyText">📻 A weak feline signal is rumoured near Old Pier...</div>
+<button onclick="dailyDiscovery()">Claim Discovery</button>
+</div>
+
+<div id="lagoonToast"></div>
+
+<div class="card">
+<h3>🏝️ Hidden Lagoon Status</h3>
+<div>Explore the lagoon, collect loot, track Steve and unlock cats.</div>
+<div class="card" id="livingNews" style="background:linear-gradient(180deg,#1d3f59,#0b1d2c);border:2px solid #5fc8ff">
+<h2>📰 Lagoon Live Feed</h2>
+<div id="liveFeedText">Waiting for world events...</div>
+<button onclick="generateWorldEvent()">Generate Event</button>
+</div>
+</div>
+
+<div class="card" id="questBoard598" style="background:linear-gradient(180deg,#214d2d,#17381f);margin:12px">
+<h2>🧭 Quest Board</h2>
+<ul>
+<li>☑ Visit Old Pier</li>
+<li>⬜ Find Steve twice</li>
+<li>⬜ Collect 5 Fish</li>
+<li>⬜ Repair Shelter Radio</li>
+</ul>
+<div style="background:#123;border-radius:10px;height:16px;overflow:hidden">
+<div style="width:25%;height:100%;background:#ffd400"></div>
+</div>
+<p><b>Reward:</b> 150 XP + Mystery Pack</p>
+</div>
+</div>
+
+<div class="tab" id="cats">
+<div class="card"><h2>Choose Cat</h2>
+<div class="catrow">
+<div class="cat" onclick="setCat('Beach Cat',this)"><img src="cats/beachcat.jpg"/><b>Beach Cat</b></div>
+<div class="cat" onclick="setCat('Punk Cat',this)"><img src="cats/punkcat.jpg"/><b>Punk Cat</b></div>
+<div class="cat" onclick="setCat('Golf Cat',this)"><img src="cats/golfcat.jpg"/><b>Golf Cat</b></div>
+<div class="cat" onclick="setCat('Desert Dave',this)"><img src="cats/desertdave.jpg"/><b>Desert Dave</b></div>
+</div>
+</div>
+</div>
+
+<div class="tab" id="collection">
+<div class="card">
+<h2>🏝️ Hidden Lagoon Collection</h2>
+<div class="card">
+<h2>🎴 Lagoon Legends Album</h2>
+<div class="albumBook"><div class="albumPage"><div class="setHeader"><div><b>📖 SET A — FELINE SIGNALS</b><br/><small>Premium Collector Album</small></div><button class="packBtn" onclick="openCatPack()">🎁 Open Booster</button></div>
+<div class="albumGrid">
+<div class="legendCard legendary">
+<div class="characterRibbon">FOUNDER SET</div>
+<div class="rarity">LEGENDARY</div>
+<div class="cardNo">#001</div>
+<div class="art"><img class="characterPortrait" src="world/assets/seagullsteve.png"/></div>
+<div class="newBadge">NEW</div>
+<b>SEAGULL STEVE</b><br/>
+<small>⭐ Fisherman • Trickster • Legendary</small><br/>
+<div class="flavor">Tried selling a mackerel to a mackerel.</div>
+</div>
+
+<div class="legendCard epic">
+<div class="rarity">EPIC</div>
+<div class="cardNo">#002</div>
+<div class="art portraitSam"></div>
+<b>SIGNAL SAM</b><br/>
+<small>📡 Radio Hunter</small><br/>
+<div class="flavor">He listens when the radios don't.</div>
+</div>
+
+<div class="legendCard rare">
+<div class="rarity">RARE</div>
+<div class="cardNo">#003</div>
+<div class="art portraitBandit"></div>
+<b>SNACK BANDIT</b><br/>
+<small>🍟 Loot Goblin</small><br/>
+<div class="flavor">Wanted for excessive snack ownership.</div>
+</div>
+
+<div class="legendCard legendary">
+<div class="rarity">LEGENDARY</div>
+<div class="cardNo">#004</div>
+<div class="art"><img class="characterPortrait" src="world/assets/cranky_krabbe.png"/></div>
+<b>CRANKY KRABBE</b><br/>
+<small>🦀 Professional Complainer</small><br/>
+<div class="flavor">Review: "Bad."</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tab" id="explore">
+<h2>🧭 Explore Hidden Lagoon</h2>
+<div class="card">
+<h3>📍 Current Hotspots</h3>
+<div class="exploreGrid">
+<div class="exploreMini" onclick="alert('🏝️ Old Pier\nSteve has been seen stealing fries.')">🏝️ Old Pier</div>
+<div class="exploreMini" onclick="alert('🌵 Punk Dunes\nA strange radio signal is active.')">🌵 Punk Dunes</div>
+<div class="exploreMini" onclick="alert('🌊 Hidden Cove\nSomething shiny is floating.')">🌊 Hidden Cove</div>
+<div class="exploreMini" onclick="alert('🗼 Lost Lighthouse\nMoonlight reveals fresh paw prints.')">🗼 Lighthouse</div>
+</div>
+</div>
+
+<div class="card">
+<h3>👣 NPCs in the world</h3>
+<ul id="npcList"></ul>
+</div>
+
+<div class="card">
+<button onclick="exploreArea()">🔍 Explore Area</button>
+<p id="exploreResult">Choose a place and start exploring.</p>
+</div>
+</div>
+
+<div class="tab" id="radio">
+<div class="card">
+<h2>📻 SHELTER RADIO 87.4 MHz</h2>
+<div style="margin-bottom:10px">The broadcasting heart of Hidden Lagoon.</div>
+<div id="radioReport">Loading broadcast...</div>
+<br/>
+<button class="radioBtn" onclick="Game.get('radio').broadcast()">New Broadcast</button>
+</div>
+
+<div class="card"><h3>🐦 Steve Tracker</h3><div id="steveStatus">Searching...</div></div>
+<div class="card"><h3>🐿️ Snack Bandit Watch</h3><div>Last Seen: Hidden Cove</div></div>
+<div class="card"><h3>🦀 Crab Activity</h3><div id="crabActivity">LOCKED — Discover the crab first.</div></div>
+</div>
+
+<div class="tab" id="journal">
+<div class="card">
+<h2>📖 Journal</h2>
+<div id="latestEntry"></div>
+</div>
+<div id="journalInfo"></div>
+</div>
+
+<script>
+const KEY='gosnuggiez';
+
+// ===== CORE ENGINE =====
+window.Engine=window.Engine||{};
+Engine.WorldLoop={
+ systems:[],
+ running:false,
+ register(system){if(system&&typeof system.update==="function"){this.systems.add(system)}return system},
+ start(){if(this.running)return;this.running=true;this.lastTime=performance.now();const tick=now=>{if(!this.running)return;const dt=(now-this.lastTime)/1000;this.lastTime=now;this.systems.forEach(system=>{try{system.update(dt)}catch(err){console.error("WorldLoop:",err)}});requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+};
+Engine.EventManager={
+ intervals:[],
+ addInterval(fn,ms){const obj={timer:0,update(dt){this.timer+=dt;if(this.timer<ms/1000)return;this.timer=0;fn()}};Engine.WorldLoop.register(obj);this.intervals.push(obj);return obj}
+};
+Engine.AssetManager={
+ cache:{},
+ paths:{steve:"steve/",sealsven:"sealsven/",bandit:"bandit/",octoolle:"octoolle/",makrill:"makrill/",krabba:"krabba/",sandcats:"sandskadda/",midnight:"midnightmaja/"},
+ get(group,file){return(this.paths[group]||"")+file},
+ preload(list=[]){list.forEach(src=>{if(this.cache[src])return;const i=new Image();i.src=src;this.cache[src]=i})}
+};
+
+// ===== GAME STATE =====
+const Game={
+ managers:{},
+ state:{},
+ register(name,obj){this.managers[name]=obj;return obj},
+ get(name){return this.managers[name]}
+};
+
+const SaveManager={
+ save(){localStorage.setItem(KEY,JSON.stringify(Game.state))},
+ load(){Game.state=JSON.parse(localStorage.getItem(KEY)||'{}');return Game.state},
+ export(){return JSON.stringify(Game.state)},
+ import(data){Game.state=typeof data==='string'?JSON.parse(data):data;this.save()},
+ migrate(){
+   Game.state.player??={};
+   Game.state.world??={};
+   Game.state.inventory??={};
+   Game.state.journal??=[];
+   Game.state.lore??={};
+   Game.state.cards??=[];
+   Game.state.settings??={};
+   return Game.state
+ }
+};
+
+const UIManager={
+ showTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')},
+ renderHome(lvl){renderHomeUI(lvl)},
+ refresh(){
+  const lvl=Math.floor(Game.state.player.xp/100)+1;
+  if(Game.state.player.rescues>=300) Game.state.player.desertDaveUnlocked=true;
+  this.renderHome(lvl);
+  applyTheme();
+  applyCharacterGlow()
+ }
+};
+
+const XPManager={
+ add(amount){
+  Game.state.player.xp=(Game.state.player.xp||0)+amount;
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const LivingNPCManager={
+ migrate(){
+  Game.state.world??={};
+  Game.state.world.npcs??={
+   steve:{name:'Steve',currentLocation:Game.state.steveLocation||'Old Pier',home:'Old Pier',favoriteLocations:['Old Pier','Hidden Cove'],mood:'Curious',activity:'Looking for snacks',lastMove:Date.now()},
+   signalSam:{name:'Signal Sam',currentLocation:'Lost Lighthouse',home:'Lost Lighthouse',favoriteLocations:['Lost Lighthouse','Punk Dunes'],mood:'Listening',activity:'Scanning radio',lastMove:Date.now()},
+   snackBandit:{name:'Snack Bandit',currentLocation:'Hidden Cove',home:'Hidden Cove',favoriteLocations:['Snack Stand','Hidden Cove'],mood:'Hungry',activity:'Stealing fries',lastMove:Date.now()},
+   sealSven:{name:'Seal Sven',currentLocation:'Old Pier',home:'Old Pier',favoriteLocations:['Old Pier'],mood:'Relaxed',activity:'Sunbathing',lastMove:Date.now()}
+  }
+ },
+ get(id){return Game.state.world.npcs[id]},
+ move(id,place){const n=this.get(id);if(!n)return;n.currentLocation=place;n.lastMove=Date.now();if(id==='steve')Game.state.steveLocation=place},
+ getAt(place){return Object.values(Game.state.world.npcs).filter(n=>n.currentLocation===place)},
+ moods:['Curious','Hungry','Relaxed','Sleeping','Investigating','Happy','Lost'],
+ randomMood(){return this.moods[Math.floor(Math.random()*this.moods.length)]},
+ tick(){
+  Object.entries(Game.state.world.npcs).forEach(([id,npc])=>{
+    if(Math.random()<0.45){
+      npc.currentLocation=npc.favoriteLocations[Math.floor(Math.random()*npc.favoriteLocations.length)];
+      npc.lastMove=Date.now();
+      npc.mood=this.randomMood();
+      if(id==='steve')Game.state.steveLocation=npc.currentLocation;
+      Game.get('journal').add('👣 '+npc.name+' moved to '+npc.currentLocation)
+    }
+  });
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const InventoryManager={add(item,count=1){if(!Game.state.inventory[item])Game.state.inventory[item]=0;Game.state.inventory[item]+=count;Game.get('save').save();if(window.__allowRefresh!==false){Game.get('ui').refresh()}}};
+
+const JournalManager={
+ add(entry){
+  Game.state.journal.push(entry);
+  if(Game.state.journal.length>100)Game.state.journal.shift();
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const PlayerManager={
+ addXP(amount){return Game.get('xp').add(amount)},
+ rescue(){
+  Game.state.player.rescues=(Game.state.player.rescues||0)+1;
+  Game.get('journal').add('Rescue #'+Game.state.player.rescues);
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const RadioManager={
+ reports:[
+  '📻 Steve spotted near Old Pier.',
+  '📻 Strange signal detected near Lost Lighthouse.',
+  '📻 Shelter Radio requests a scan.',
+  '📻 Search Punk Dunes today'
+ ],
+ broadcast(){const r=this.reports[Math.floor(Math.random()*this.reports.length)];const el=document.getElementById('radioReport');if(el)el.innerHTML='<b>Latest Broadcast</b><br><br>'+r;Game.get('journal').add('📻 '+r);Game.get('save').save();if(window.__allowRefresh!==false){Game.get('ui').refresh()}}
+};
+
+// ===== REGISTRATION =====
+Game.register('save',SaveManager);
+Game.register('ui',UIManager);
+Game.register('xp',XPManager);
+Game.register('npc',LivingNPCManager);
+Game.register('inventory',InventoryManager);
+Game.register('journal',JournalManager);
+Game.register('player',PlayerManager);
+Game.register('radio',RadioManager);
+
+// ===== UI FUNCTIONS =====
+function applyTheme(){
+ const themes={
+  'Beach Cat':'linear-gradient(180deg,#2196f3,#0d47a1)',
+  'Punk Cat':'linear-gradient(180deg,#333,#000)',
+  'Golf Cat':'linear-gradient(180deg,#4caf50,#1b5e20)',
+  'Desert Dave':'linear-gradient(180deg,#c49a6c,#8d6e63)'
+ };
+ document.body.style.background=themes[Game.state.player.activeCat]||'#071629'
+}
+
+function applyCharacterGlow(){
+ const colors={
+  'Beach Cat':{border:'#ff4fa3',glow:'0 0 25px rgba(255,79,163,.9)'},
+  'Punk Cat':{border:'#ff00ff',glow:'0 0 25px rgba(255,0,255,.9)'},
+  'Golf Cat':{border:'#7cff4d',glow:'0 0 25px rgba(124,255,77,.9)'},
+  'Desert Dave':{border:'#ff9d2e',glow:'0 0 25px rgba(255,157,46,.9)'}
+ };
+ const cfg=colors[Game.state.player.activeCat];
+ if(cfg){
+  const mascot=document.getElementById('activeMascot');
+  if(mascot){mascot.style.filter=`drop-shadow(0 0 12px ${cfg.border}) drop-shadow(0 0 24px ${cfg.border}) drop-shadow(0 0 48px ${cfg.border})`}
+ }
+}
+
+function setCat(name,el){
+ if(!Game.state.player)Game.state.player={};
+ Game.state.player.activeCat=name;
+ localStorage.setItem(KEY,JSON.stringify(Game.state));
+ document.querySelectorAll('.cat').forEach(x=>x.classList.remove('sel'));
+ if(el)el.classList.add('sel');
+ renderHomeUI(Math.floor((Game.state.player.xp||0)/100)+1);
+ applyTheme();
+ applyCharacterGlow();
+ const mascot=document.getElementById('activeMascot');
+ const map={'Beach Cat':'cats/frilagdbeachkatt.png','Punk Cat':'cats/frilagdpunkkatt.png','Golf Cat':'cats/frilagdgolfkatt.png','Desert Dave':'cats/frilagddesertdave.png'};
+ if(mascot&&map[name])mascot.src=map[name]
+}
+
+function renderHomeUI(lvl){
+ const heroes={'Beach Cat':'🌴','Punk Cat':'🛹','Golf Cat':'⛳','Desert Dave':'🌵'};
+ const map={'Beach Cat':'cats/frilagdbeachkatt.png','Punk Cat':'cats/frilagdpunkkatt.png','Golf Cat':'cats/frilagdgolfkatt.png','Desert Dave':'cats/frilagddesertdave.png'};
+ const heroMap={'Beach Cat':'cats/beachcat.jpg','Punk Cat':'cats/punkcat.jpg','Golf Cat':'cats/golfcat.jpg','Desert Dave':'cats/desertdave.jpg'};
+ const xpEl=document.getElementById('xp');if(xpEl)xpEl.textContent=Game.state.player.xp;
+ if(window.heroLevel)heroLevel.textContent=lvl;
+ if(window.heroRescues)heroRescues.textContent=Game.state.player.rescues;
+ if(window.heroImg){heroImg.src=heroMap[Game.state.player.activeCat]||heroMap['Golf Cat'];heroImg.style.objectFit='cover'}
+ const mascot=document.getElementById('activeMascot');if(mascot)mascot.src=map[Game.state.player.activeCat]||map['Golf Cat']
+}
+
+function xpPopup(txt){
+ const d=document.createElement('div');
+ d.className='xpPop';
+ d.textContent=txt;
+ document.body.appendChild(d);
+ setTimeout(()=>d.remove(),6500)
+}
+
+function exploreArea(){
+ const loot=['🪶 You found one of Steve\'s feathers! (+20 XP)','🐟 You caught a fish.','📻 A weak radio signal was detected.','🗺️ You discovered a hidden trail.','🍟 Snack Bandit dropped some fries.'];
+ const t=loot[Math.floor(Math.random()*loot.length)];
+ document.getElementById('exploreResult').textContent=t;
+ if(window.Game&&Game.get&&Game.get('xp'))Game.get('xp').add(20)
+}
+
+function dailyDiscovery(){
+ const msgs=['🐦 Steve dropped a mysterious feather.','📻 Strange radio burst detected.','🐱 Feline Signal intensity increased.','🦀 Krabban reluctantly approved one shell.','📦 A dusty booster washed ashore.'];
+ const t=msgs[Math.floor(Math.random()*msgs.length)];
+ if(window.Game&&Game.get){
+   Game.get('xp').add(15);
+   if(Game.state.journal)Game.state.journal.push("🌊 "+t);
+   Game.get('save').save()
+ }
+}
+
+function generateWorldEvent(){
+ const e=['🐦 Steve stole fries from Snack Bandit.','📻 Signal Sam detected a strange transmission.','🦀 Cranky Krabbe found a shiny coin.','🦭 Seal Sven scared away hungry gulls.','🗺️ Map Magnus discovered a hidden shortcut.','🌙 Midnight Maja left mysterious paw prints.'];
+ const ev=e[Math.floor(Math.random()*e.length)];
+ document.getElementById('liveFeedText').textContent=ev;
+ if(window.Game&&Game.get&&Game.get('journal')){Game.get('journal').add(ev)}
+ if(window.Game&&Game.get&&Game.get('xp')){Game.get('xp').add(15)}
+}
+
+function openCatPack(){
+ const o=document.getElementById('packFx');
+ o.style.display='flex';
+ setTimeout(()=>{o.style.display='none'},2300)
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded',()=>{
+ const assets=['world/assets/seagullsteve.png','cats/beachcat.jpg','cats/punkcat.jpg','cats/golfcat.jpg','cats/desertdave.jpg'];
+ Engine.AssetManager.preload(assets);
+
+ Game.state=JSON.parse(localStorage.getItem(KEY)||'{}');
+ Game.state.player=Game.state.player||{};
+ Game.state.player.xp=Game.state.player.xp||0;
+ Game.state.player.activeCat=Game.state.player.activeCat||'Golf Cat';
+ Game.state.player.rescues=Game.state.player.rescues||0;
+ Game.state.journal=Game.state.journal||[];
+ Game.state.steveLocation=Game.state.steveLocation||'Old Pier';
+
+ Game.get('save').migrate();
+ Game.get('npc').migrate();
+
+ renderHomeUI(Math.floor(Game.state.player.xp/100)+1);
+ applyTheme();
+ applyCharacterGlow();
+ 
+ Game.get('radio').broadcast();
+ 
+ Engine.WorldLoop.start();
+ 
+ Engine.EventManager.addInterval(()=>{
+   if(window.Game&&Game.get&&Game.get('npc')){Game.get('npc').tick()}
+ });
+
+ // Steve movement
+ Engine.EventManager.addInterval(()=>{
+   const places=['Old Pier','Hidden Cove','Punk Dunes','Lost Lighthouse'];
+   Game.state.steveLocation=places[Math.floor(Math.random()*places.length)];
+   const s=document.getElementById('steveStatus');
+   if(s)s.innerHTML='<b>'+Game.state.steveLocation+'</b>';
+ },30000);
+
+ // Spawn particles
+ Engine.EventManager.addInterval(()=>{
+   const b=document.createElement('div');
+   b.className='waterBubble';
+   const s=20+Math.random()*80;
+   b.style.width=s+'px';b.style.height=s+'px';
+   b.style.left=(Math.random()*100)+'vw';
+   b.style.animationDuration=(8+Math.random()*10)+'s';
+   document.body.appendChild(b);
+   setTimeout(()=>b.remove(),20000)
+ },700);
+
+ // Fish spawning
+ Engine.EventManager.addInterval(()=>{
+   const layer=document.getElementById('fishLayer');if(!layer)return;
+   if(layer.children.length>8)return;
+   const f=document.createElement('div');
+   f.className='lagoonFish';
+   f.textContent=Math.random()<0.5?'🐟':'🐠';
+   f.style.top=(120+Math.random()*(window.innerHeight-250))+'px';
+   f.style.animationDuration=(18+Math.random()*12)+'s';
+   layer.appendChild(f);
+   setTimeout(()=>f.remove(),32000)
+ },1800);
+
+ // Fireflies
+ Engine.EventManager.addInterval(()=>{
+   const f=document.createElement('div');
+   f.className='firefly';
+   f.textContent='✨';
+   f.style.left=(Math.random()*100)+'vw';
+   f.style.top=(60+Math.random()*35)+'vh';
+   document.body.appendChild(f);
+   setTimeout(()=>f.remove(),10000)
+ },2200);
+
+ // Crabs
+ for(let i=0;i<2;i++){
+   const c=document.createElement('div');
+   c.className='crab';
+   c.textContent='🦀';
+   c.style.animationDelay=(Math.random()*20)+'s';
+   document.body.appendChild(c)
+ }
+
+ // Steve sprite
+ const layer=document.getElementById('steveLayer');
+ const shadow=document.createElement('div');
+ shadow.id='steveShadow';
+ const img=document.createElement('img');
+ img.id='steveSprite';
+ img.src='world/assets/seagullsteve.png';
+ layer.appendChild(shadow);
+ layer.appendChild(img);
+
+ let x=-80,y=140,v=1.6,t=0;
+ function loop(){
+   t+=0.06;
+   x+=v;
+   if(x>window.innerWidth+80)x=-80;
+   y=140+Math.sin(t)*14;
+   img.style.left=x+'px';
+   img.style.top=y+'px';
+   img.style.transform='rotate('+Math.sin(t)*5+'deg)';
+   shadow.style.left=(x+10)+'px';
+   shadow.style.top=(y+48)+'px';
+   requestAnimationFrame(loop)
+ }
+ requestAnimationFrame(loop);
+
+ img.addEventListener('click',()=>{
+   for(let i=0;i<6;i++){
+     const f=document.createElement('div');
+     f.textContent='🪶';
+     f.style.position='fixed';
+     f.style.left=(x+40)+'px';
+     f.style.top=(y+40)+'px';
+     f.style.fontSize='24px';
+     f.style.pointerEvents='none';
+     f.style.animation='fadeUp 3s forwards';
+     document.body.appendChild(f);
+     setTimeout(()=>f.remove(),3000)
+   }
+   if(window.Game&&Game.get)Game.get('xp').add(25)
+ });
+
+ img.addEventListener('pointerdown',()=>{if(navigator.vibrate)navigator.vibrate(40)});
+});
+
+window.__allowRefresh=true;
+
+// Cleanup on visibility change
+document.addEventListener('visibilitychange',()=>{
+ document.body.classList.toggle('game-paused',document.hidden)
+});
+</script>
+</body>
+</html>
