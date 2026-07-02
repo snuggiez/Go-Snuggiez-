@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Hidden Lagoon - BUILD1141</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(180deg,#04111d,#0a2238 55%,#081a2c);color:#fff;overflow-y:auto;min-height:100vh}
+nav{display:flex;position:sticky;top:0;background:#111;z-index:100}
+nav button{flex:1;padding:8px;border:0;background:#111;color:#ffd400;cursor:pointer;transition:.15s}
+nav button:hover{background:#222}
+button{background:linear-gradient(180deg,#ffd400,#e6b800);color:#000;border:none;border-radius:16px;padding:12px;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.3);transition:.15s;cursor:pointer}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.4)}
+button:active{transform:translateY(2px)}
+.tab{display:none;padding:12px}.active{display:block}
+.card{background:#14365c;border-radius:16px;padding:10px;margin:8px 0;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:.25s}
+.card:hover{transform:translateY(-2px)}
+.heroCard{background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.35));border-radius:22px;padding:10px;box-shadow:0 12px 35px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.heroStats{display:flex;gap:8px}.heroStats .card{flex:1;text-align:center}
+.catrow{display:flex;gap:10px;flex-wrap:wrap}
+.cat{flex:1;min-width:220px;background:#0f2844;padding:10px;border-radius:12px;cursor:pointer;transition:all .25s ease}
+.cat:hover{transform:translateY(-3px)}
+.cat img{width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:6px}
+.heroImg{width:100%;height:420px;object-fit:cover;object-position:center top;border-radius:18px;margin-bottom:6px;background:#0b2038;display:block;box-shadow:0 0 20px rgba(0,0,0,.5)}
+.posterGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.posterCard{background:#102844;border-radius:18px;overflow:hidden;cursor:pointer;transition:.25s}
+.posterCard:hover{transform:translateY(-6px) scale(1.02)}
+.posterCard img{width:100%;height:220px;object-fit:cover;display:block}
+.posterCard h3{margin:10px;padding:0}
+.exploreGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.exploreMini{background:#102844;border-radius:16px;padding:14px;font-weight:700;text-align:center;cursor:pointer}
+.albumGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.legendCard{border-radius:22px;padding:12px;color:#fff;min-height:260px;box-shadow:0 10px 30px rgba(0,0,0,.45);position:relative;overflow:hidden;transition:.25s}
+.legendCard:hover{transform:translateY(-6px) rotate(-1deg)}
+.legendCard .art{height:140px;border-radius:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:72px;background:rgba(255,255,255,.12)}
+.legendary{background:linear-gradient(180deg,#8a6a00,#3d2d00);border:3px solid gold}
+.epic{background:linear-gradient(180deg,#5a2b7a,#251136);border:3px solid #d07cff}
+.rare{background:linear-gradient(180deg,#12507a,#0a2740);border:3px solid #7ec8ff}
+.rarity{font-weight:900;letter-spacing:1px}
+.cardNo{opacity:.8;font-size:12px}
+.flavor{opacity:.95;font-style:italic}
+.characterRibbon{position:absolute;left:10px;top:10px;background:#111;color:#ffd400;padding:6px 10px;border-radius:999px;font-weight:700;font-size:11px;letter-spacing:1px}
+.newBadge{position:absolute;top:12px;right:12px;background:#ff3b30;color:#fff;padding:4px 8px;border-radius:999px;font-weight:bold}
+#activeTitle{font-size:28px;font-weight:800;text-transform:uppercase}
+.sel{outline:3px solid #ffd400;transform:scale(1.05);box-shadow:0 0 20px rgba(255,212,0,.8)}
+#xpPop{position:fixed;left:50%;top:120px;transform:translateX(-50%);background:#ffd400;color:#000;padding:8px 12px;border-radius:12px;font-weight:bold;z-index:9999;animation:fadeUp 1s forwards}
+@keyframes fadeUp{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-40px)}}
+#activeMascot{position:fixed;left:260px;bottom:90px;width:220px;z-index:9999;pointer-events:none;animation:floatCat 4s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+@keyframes floatCat{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+#steveCardOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100000;align-items:center;justify-content:center;flex-direction:column}
+#steveCard{background:#14365c;border:3px solid #ffd400;border-radius:22px;max-width:360px;width:90%;padding:18px;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:popIn .2s ease}
+#steveCard img{width:100%;border-radius:14px}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#steveSpeech{position:fixed;display:none;max-width:240px;background:#fff;color:#111;padding:10px 14px;border-radius:16px;border:3px solid #ffd400;z-index:100001;font-weight:bold;box-shadow:0 8px 20px rgba(0,0,0,.4);backdrop-filter:blur(6px)}
+#steveSprite{position:fixed;width:190px;height:auto;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transform-origin:center;transition:transform .18s ease,filter .18s ease;z-index:9500}
+#steveShadow{position:absolute;width:56px;height:18px;background:rgba(0,0,0,.25);border-radius:50%;filter:blur(3px)}
+#lagoonToast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:rgba(8,24,38,.96);color:#fff;border:2px solid #ffd400;border-radius:18px;padding:14px 20px;z-index:999999;display:none;box-shadow:0 10px 35px rgba(0,0,0,.45)}
+#dailyDiscovery{background:linear-gradient(180deg,#0f3558,#163f69);border:2px solid #5fc8ff;border-radius:18px;padding:14px;margin:12px 0}
+#packFx{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);z-index:9999999;flex-direction:column}
+#packFx .pack{font-size:120px;animation:shake .25s infinite}
+#packFx .msg{font-size:34px;color:#ffd400;font-weight:bold}
+@keyframes shake{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+#pocketRadarBtn{position:fixed;right:18px;bottom:18px;z-index:999999;width:92px;height:92px;border-radius:50%;font-size:28px;font-weight:900;box-shadow:0 0 25px rgba(255,212,0,.8);animation:radarPulse 2s infinite}
+@keyframes radarPulse{50%{transform:scale(1.08)}}
+.portraitSteve{background:url('oldpier/evening-pier.webp') center/cover}
+.portraitSam{background:url('lostlighthouse/lost-lighthouse-hero.webp') center/cover}
+.portraitBandit{background:url('punkdunes/antenna-field.webp') center/cover}
+.portraitKrabbe{background:url('hiddencove/hidden-cove-hero.webp') center/cover}
+#lagoonClock{position:fixed;left:14px;top:74px;z-index:999999;background:rgba(8,24,38,.85);border:2px solid #ffd400;border-radius:14px;padding:8px 12px;font-weight:bold;backdrop-filter:blur(4px)}
+#fishLayer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.lagoonFish{position:absolute;font-size:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));animation:swimAcross linear forwards}
+@keyframes swimAcross{0%{transform:translateX(-80px) translateY(0) scaleX(1)}48%{transform:translateX(50vw) translateY(-12px)}52%{transform:translateX(50vw) translateY(-12px) scaleX(-1)}100%{transform:translateX(-80px) translateY(8px) scaleX(-1)}}
+.waterBubble{position:fixed;bottom:-120px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.12));box-shadow:0 0 20px rgba(180,220,255,.45);animation:lagoonRise linear forwards}
+@keyframes lagoonRise{0%{transform:translateY(0);opacity:0}10%{opacity:.85}100%{transform:translateY(-120vh);opacity:0}}
+.firefly{position:fixed;font-size:10px;pointer-events:none;z-index:4;animation:fireflyFloat 10s linear infinite}
+@keyframes fireflyFloat{0%{transform:translate(0,0)}100%{transform:translate(20px,-120px);opacity:0}}
+.crab{position:fixed;bottom:18px;font-size:26px;z-index:3;pointer-events:none;animation:crabWalk 30s linear infinite}
+@keyframes crabWalk{from{left:-40px}to{left:105vw}}
+.npcToast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#102844;color:#fff;padding:12px 18px;border:2px solid #ffd400;border-radius:14px;z-index:999999;display:none}
+#introOverlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:99999999;transition:opacity 1.5s ease}
+#introLogo{font:900 54px Arial;color:#f5d36a;letter-spacing:4px;text-shadow:0 0 30px rgba(255,212,0,.5);opacity:0;transform:scale(.9);animation:introLogo 2.5s forwards .6s}
+#introSub{margin-top:18px;color:#cfd8dc;opacity:0;animation:introFade 2s forwards 1.8s}
+#introFog{position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,rgba(80,140,180,.25),transparent 60%),linear-gradient(#000,#0b2238);animation:fogDrift 8s linear infinite}
+@keyframes introLogo{to{opacity:1;transform:scale(1)}}
+@keyframes introFade{to{opacity:.9}}
+@keyframes fogDrift{0%{transform:translateX(-2%)}50%{transform:translateX(2%)}100%{transform:translateX(-2%)}}
+#introSteve{position:absolute;top:22%;left:-240px;font-size:120px;animation:steveFly 4.2s linear forwards .8s;filter:drop-shadow(0 8px 18px rgba(0,0,0,.5))}
+@keyframes steveFly{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 420px))}}
+
+#steveSprite.steveFlying{animation:steveFlightLoop .55s steps(2) infinite;}
+@keyframes steveFlightLoop{
+0%{transform:translateY(0) rotate(-8deg) scale(1);}
+50%{transform:translateY(-10px) rotate(8deg) scale(1.03);}
+100%{transform:translateY(0) rotate(-8deg) scale(1);}
+}
+
+
+#scannerHud{position:fixed;right:18px;top:80px;z-index:999998;background:rgba(8,24,38,.92);border:2px solid #ffd400;border-radius:14px;padding:10px;width:170px;font:12px monospace}
+#scannerBar{height:8px;background:#234;border-radius:6px;overflow:hidden;margin:6px 0}
+#scannerFill{height:100%;width:72%;background:#5cff7a}
+
+</style>
+</head>
+
+<body>
+<div style="position:fixed;right:12px;top:12px;z-index:999999;
+background:#17381f;color:#9cff9c;padding:8px 12px;
+border:2px solid #7cff4d;border-radius:10px;font-weight:bold">
+BUILD1138 PREVIEW<br>
+✓ World polish<br>
+✓ Demo roadmap started
+</div>
+
+
+<div id="build700badge" style="position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:1000002;background:#0b2238;color:#ffd400;padding:8px 16px;border:2px solid #ffd400;border-radius:20px;font-weight:bold">BUILD1137 — Living Ecosystem Beta</div>
+
+
+<div id="scannerHud">
+<b>SCANNER</b>
+<div id="scannerBar"><div id="scannerFill"></div></div>
+<div id="scannerTarget">Target: STEVE</div>
+<div id="scannerState">State: FLY</div>
+<div id="scannerDist">Distance: 43 m</div>
+</div>
+
+<div id="steveLayer"></div>
+<div id="steveSpeech"></div>
+
+<div id="steveCardOverlay" onclick="if(event.target===this)this.style.display='none'">
+<div id="steveCard">
+<h2>🐦 Seagull Steve</h2>
+<img src="world/assets/seagullsteve.png"/>
+<p><b>Plats:</b> <span id="steveCardPlace">Old Pier</span></p>
+<p>🍟 Professionell snackstjuv.</p>
+<button onclick="document.getElementById('steveCardOverlay').style.display='none'">Stäng</button>
+</div>
+</div>
+
+<div id="packFx"><div class="pack">📦</div><div class="msg">RIPPING PACK...</div></div>
+<img id="activeMascot" src="cats/frilagdgolfkatt.png"/>
+
+<nav>
+<button onclick="Game.get('ui').showTab('home')">🏠</button>
+<button onclick="Game.get('ui').showTab('cats')">CATS</button>
+<button onclick="Game.get('ui').showTab('collection')">BACKSNACK</button>
+<button onclick="Game.get('ui').showTab('explore')">EXPLORE</button>
+<button onclick="Game.get('ui').showTab('radio')">RADIO</button>
+<button onclick="Game.get('ui').showTab('journal')">JOURNAL</button>
+</nav>
+
+<div class="tab active" id="home">
+<div class="heroCard"><img class="heroImg" id="heroImg" src="cats/golfcat.jpg"/>
+<div style="position:absolute;left:20px;right:20px;bottom:20px;background:rgba(0,0,0,.68);padding:14px;border-radius:20px;backdrop-filter:blur(4px)">
+<div id="heroOverlayName" style="font-size:28px;font-weight:900;letter-spacing:1px">GOLF CAT</div>
+<div>LEVEL <span id="heroLevel">1</span></div>
+<div>RESCUES <span id="heroRescues">0</span></div>
+</div>
+<div id="heroCat" style="display:none">🐱</div>
+</div>
+
+<div style="display:flex;gap:4px">
+<button onclick="Game.get('player').addXP(10)" style="flex:1">🍟 Treat</button>
+<button onclick="Game.get('player').addXP(25)" style="flex:1">🦐 Hunt</button>
+<button onclick="Game.get('player').rescue();Game.get('player').addXP(50)" style="flex:1">🐱 Rescue</button>
+</div>
+
+<div class="card" style="background:linear-gradient(180deg,#355c2d,#4f7d3a)">
+<h3>🌼 MIDSUMMER EVENT</h3>
+<div>Collect 🌼 Flower Crowns, 🐟 Herring and 🍓 Summer Treats.</div>
+</div>
+
+<div id="dailyDiscovery">
+<h3>🌊 DAILY DISCOVERY</h3>
+<div id="dailyText">📻 A weak feline signal is rumoured near Old Pier...</div>
+<button onclick="dailyDiscovery()">Claim Discovery</button>
+</div>
+
+<div id="lagoonToast"></div>
+
+<div class="card">
+<h3>🏝️ Hidden Lagoon Status</h3>
+<div>Explore the lagoon, collect loot, track Steve and unlock cats.</div>
+<div class="card" id="livingNews" style="background:linear-gradient(180deg,#1d3f59,#0b1d2c);border:2px solid #5fc8ff">
+<h2>📰 Lagoon Live Feed</h2>
+<div id="liveFeedText">Waiting for world events...</div>
+<button onclick="generateWorldEvent()">Generate Event</button>
+</div>
+</div>
+
+<div class="card" id="questBoard598" style="background:linear-gradient(180deg,#214d2d,#17381f);margin:12px">
+<h2>🧭 Quest Board</h2>
+<ul>
+<li>☑ Visit Old Pier</li>
+<li>⬜ Find Steve twice</li>
+<li>⬜ Collect 5 Fish</li>
+<li>⬜ Repair Shelter Radio</li>
+</ul>
+<div style="background:#123;border-radius:10px;height:16px;overflow:hidden">
+<div style="width:25%;height:100%;background:#ffd400"></div>
+</div>
+<p><b>Reward:</b> 150 XP + Mystery Pack</p>
+</div>
+</div>
+
+<div class="tab" id="cats">
+<div class="card"><h2>Choose Cat</h2>
+<div class="catrow">
+<div class="cat" onclick="setCat('Beach Cat',this)"><img src="cats/beachcat.jpg"/><b>Beach Cat</b></div>
+<div class="cat" onclick="setCat('Punk Cat',this)"><img src="cats/punkcat.jpg"/><b>Punk Cat</b></div>
+<div class="cat" onclick="setCat('Golf Cat',this)"><img src="cats/golfcat.jpg"/><b>Golf Cat</b></div>
+<div class="cat" onclick="setCat('Desert Dave',this)"><img src="cats/desertdave.jpg"/><b>Desert Dave</b></div>
+</div>
+</div>
+</div>
+
+<div class="tab" id="collection">
+<div class="card">
+<h2>🏝️ Hidden Lagoon Collection</h2>
+<div class="card">
+<h2>🎴 Lagoon Legends Album</h2>
+<div class="albumBook"><div class="albumPage"><div class="setHeader"><div><b>📖 SET A — FELINE SIGNALS</b><br/><small>Premium Collector Album</small></div><button class="packBtn" onclick="openCatPack()">🎁 Open Booster</button></div>
+<div class="albumGrid">
+<div class="legendCard legendary">
+<div class="characterRibbon">FOUNDER SET</div>
+<div class="rarity">LEGENDARY</div>
+<div class="cardNo">#001</div>
+<div class="art"><img class="characterPortrait" src="world/assets/seagullsteve.png"/></div>
+<div class="newBadge">NEW</div>
+<b>SEAGULL STEVE</b><br/>
+<small>⭐ Fisherman • Trickster • Legendary</small><br/>
+<div class="flavor">Tried selling a mackerel to a mackerel.</div>
+</div>
+
+<div class="legendCard epic">
+<div class="rarity">EPIC</div>
+<div class="cardNo">#002</div>
+<div class="art portraitSam"></div>
+<b>SIGNAL SAM</b><br/>
+<small>📡 Radio Hunter</small><br/>
+<div class="flavor">He listens when the radios don't.</div>
+</div>
+
+<div class="legendCard rare">
+<div class="rarity">RARE</div>
+<div class="cardNo">#003</div>
+<div class="art portraitBandit"></div>
+<b>SNACK BANDIT</b><br/>
+<small>🍟 Loot Goblin</small><br/>
+<div class="flavor">Wanted for excessive snack ownership.</div>
+</div>
+
+<div class="legendCard legendary">
+<div class="rarity">LEGENDARY</div>
+<div class="cardNo">#004</div>
+<div class="art"><img class="characterPortrait" src="world/assets/cranky_krabbe.png"/></div>
+<b>CRANKY KRABBE</b><br/>
+<small>🦀 Professional Complainer</small><br/>
+<div class="flavor">Review: "Bad."</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tab" id="explore">
+<h2>🧭 Explore Hidden Lagoon</h2>
+<div class="card">
+<h3>📍 Current Hotspots</h3>
+<div class="exploreGrid">
+<div class="exploreMini" onclick="alert('🏝️ Old Pier\nSteve has been seen stealing fries.')">🏝️ Old Pier</div>
+<div class="exploreMini" onclick="alert('🌵 Punk Dunes\nA strange radio signal is active.')">🌵 Punk Dunes</div>
+<div class="exploreMini" onclick="alert('🌊 Hidden Cove\nSomething shiny is floating.')">🌊 Hidden Cove</div>
+<div class="exploreMini" onclick="alert('🗼 Lost Lighthouse\nMoonlight reveals fresh paw prints.')">🗼 Lighthouse</div>
+</div>
+</div>
+
+<div class="card">
+<h3>👣 NPCs in the world</h3>
+<ul id="npcList"></ul>
+</div>
+
+<div class="card">
+<button onclick="exploreArea()">🔍 Explore Area</button>
+<p id="exploreResult">Choose a place and start exploring.</p>
+</div>
+</div>
+
+<div class="tab" id="radio">
+<div class="card">
+<h2>📻 SHELTER RADIO 87.4 MHz</h2>
+<div style="margin-bottom:10px">The broadcasting heart of Hidden Lagoon.</div>
+<div id="radioReport">Loading broadcast...</div>
+<br/>
+<button class="radioBtn" onclick="Game.get('radio').broadcast()">New Broadcast</button>
+</div>
+
+<div class="card"><h3>🐦 Steve Tracker</h3><div id="steveStatus">Searching...</div></div>
+<div class="card"><h3>🐿️ Snack Bandit Watch</h3><div>Last Seen: Hidden Cove</div></div>
+<div class="card"><h3>🦀 Crab Activity</h3><div id="crabActivity">LOCKED — Discover the crab first.</div></div>
+</div>
+
+<div class="tab" id="journal">
+<div class="card">
+<h2>📖 Journal</h2>
+<div id="latestEntry"></div>
+</div>
+<div id="journalInfo"></div>
+</div>
+
+<script>
+const KEY='gosnuggiez';
+
+// ===== CORE ENGINE =====
+window.Engine=window.Engine||{};
+
+Engine.Services={registry:{},register(n,o){this.registry[n]=o;return o;},get(n){return this.registry[n]}};
+
+Engine.Events={listeners:{},on(n,f){(this.listeners[n]??=[]).push(f);},off(n,f){this.listeners[n]=(this.listeners[n]||[]).filter(x=>x!==f);},emit(n,d){(this.listeners[n]||[]).forEach(fn=>{try{fn(d)}catch(e){console.error(e)}});}};
+
+Engine.Core={
+ boot(){
+  this.initAssets();
+  this.initSave();
+  this.initManagers();
+  this.initWorld();
+  this.initEffects();
+  Engine.WorldLoop.start();
+  Engine.Events.emit("engine:boot");
+ },
+ initAssets(){},initSave(){},initManagers(){},initWorld(){},initEffects(){}
+};
+
+
+Engine.EntityRegistry={
+ entities:[],
+ add(e){if(!this.entities.includes(e))this.entities.push(e);return e;},
+ remove(e){this.entities=this.entities.filter(x=>x!==e);}
+};
+
+Engine.AnimationManager={
+ float(obj,t,a=14){obj.style.transform='translateY('+Math.sin(t)*a+'px)';},
+ hover(obj,t){obj.style.transform='rotate('+(Math.sin(t)*5)+'deg)';}
+};
+
+Engine.WorldManager={
+ init(){},
+ spawn(entity){Engine.EntityRegistry.add(entity);Engine.WorldLoop.register(entity);}
+};
+
+
+Engine.WorldLoop={
+ systems:[],
+ running:false,
+ register(system){if(system&&typeof system.update==="function"){this.systems.push(system)}return system},
+ start(){if(this.running)return;this.running=true;this.lastTime=performance.now();const tick=now=>{if(!this.running)return;const dt=(now-this.lastTime)/1000;this.lastTime=now;this.systems.forEach(system=>{try{system.update(dt)}catch(err){console.error("WorldLoop:",err)}});requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+};
+Engine.EventManager={
+ intervals:[],
+ addInterval(fn,ms){const obj={timer:0,update(dt){this.timer+=dt;if(this.timer<ms/1000)return;this.timer=0;fn()}};Engine.WorldLoop.register(obj);this.intervals.push(obj);return obj}
+};
+Engine.AssetManager={
+ cache:{},
+ paths:{steve:"steve/",sealsven:"sealsven/",bandit:"bandit/",octoolle:"octoolle/",makrill:"makrill/",krabba:"krabba/",sandcats:"sandskadda/",midnight:"midnightmaja/"},
+ get(group,file){return(this.paths[group]||"")+file},
+ preload(list=[]){list.forEach(src=>{if(this.cache[src])return;const i=new Image();i.src=src;this.cache[src]=i})}
+};
+
+// ===== GAME STATE =====
+const Game={
+ managers:{},
+ state:{},
+ register(name,obj){this.managers[name]=obj;return obj},
+ get(name){return Engine.Services?.get(name) || this.managers[name]}
+};
+
+const SaveManager={
+ save(){localStorage.setItem(KEY,JSON.stringify(Game.state))},
+ load(){Game.state=JSON.parse(localStorage.getItem(KEY)||'{}');return Game.state},
+ export(){return JSON.stringify(Game.state)},
+ import(data){Game.state=typeof data==='string'?JSON.parse(data):data;this.save()},
+ migrate(){
+   Game.state.player??={};
+   Game.state.world??={};
+   Game.state.inventory??={};
+   Game.state.journal??=[];
+   Game.state.lore??={};
+   Game.state.cards??=[];
+   Game.state.settings??={};
+   return Game.state
+ }
+};
+
+const UIManager={
+ showTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')},
+ renderHome(lvl){renderHomeUI(lvl)},
+ refresh(){
+  const lvl=Math.floor(Game.state.player.xp/100)+1;
+  if(Game.state.player.rescues>=300) Game.state.player.desertDaveUnlocked=true;
+  this.renderHome(lvl);
+  applyTheme();
+  applyCharacterGlow()
+ }
+};
+
+const XPManager={
+ add(amount){
+  Game.state.player.xp=(Game.state.player.xp||0)+amount;
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const LivingNPCManager={
+ migrate(){
+  Game.state.world??={};
+  Game.state.world.npcs??={
+   steve:{name:'Steve',currentLocation:Game.state.steveLocation||'Old Pier',home:'Old Pier',favoriteLocations:['Old Pier','Hidden Cove'],mood:'Curious',activity:'Looking for snacks',lastMove:Date.now()},
+   signalSam:{name:'Signal Sam',currentLocation:'Lost Lighthouse',home:'Lost Lighthouse',favoriteLocations:['Lost Lighthouse','Punk Dunes'],mood:'Listening',activity:'Scanning radio',lastMove:Date.now()},
+   snackBandit:{name:'Snack Bandit',currentLocation:'Hidden Cove',home:'Hidden Cove',favoriteLocations:['Snack Stand','Hidden Cove'],mood:'Hungry',activity:'Stealing fries',lastMove:Date.now()},
+   sealSven:{name:'Seal Sven',currentLocation:'Old Pier',home:'Old Pier',favoriteLocations:['Old Pier'],mood:'Relaxed',activity:'Sunbathing',lastMove:Date.now()}
+  }
+ },
+ get(id){return Game.state.world.npcs[id]},
+ move(id,place){const n=this.get(id);if(!n)return;n.currentLocation=place;n.lastMove=Date.now();if(id==='steve')Game.state.steveLocation=place},
+ getAt(place){return Object.values(Game.state.world.npcs).filter(n=>n.currentLocation===place)},
+ moods:['Curious','Hungry','Relaxed','Sleeping','Investigating','Happy','Lost'],
+ randomMood(){return this.moods[Math.floor(Math.random()*this.moods.length)]},
+ tick(){
+  Object.entries(Game.state.world.npcs).forEach(([id,npc])=>{
+    if(Math.random()<0.45){
+      npc.currentLocation=npc.favoriteLocations[Math.floor(Math.random()*npc.favoriteLocations.length)];
+      npc.lastMove=Date.now();
+      npc.mood=this.randomMood();
+      if(id==='steve')Game.state.steveLocation=npc.currentLocation;
+      Game.get('journal').add('👣 '+npc.name+' moved to '+npc.currentLocation)
+    }
+  });
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const InventoryManager={add(item,count=1){if(!Game.state.inventory[item])Game.state.inventory[item]=0;Game.state.inventory[item]+=count;Game.get('save').save();if(window.__allowRefresh!==false){Game.get('ui').refresh()}}};
+
+const JournalManager={
+ add(entry){
+  Game.state.journal.push(entry);
+  if(Game.state.journal.length>100)Game.state.journal.shift();
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const PlayerManager={
+ addXP(amount){return Game.get('xp').add(amount)},
+ rescue(){
+  Game.state.player.rescues=(Game.state.player.rescues||0)+1;
+  Game.get('journal').add('Rescue #'+Game.state.player.rescues);
+  Game.get('save').save();
+  if(window.__allowRefresh!==false){Game.get('ui').refresh()}
+ }
+};
+
+const RadioManager={
+ reports:[
+  '📻 Steve spotted near Old Pier.',
+  '📻 Strange signal detected near Lost Lighthouse.',
+  '📻 Shelter Radio requests a scan.',
+  '📻 Search Punk Dunes today'
+ ],
+ broadcast(){const r=this.reports[Math.floor(Math.random()*this.reports.length)];const el=document.getElementById('radioReport');if(el)el.innerHTML='<b>Latest Broadcast</b><br><br>'+r;Game.get('journal').add('📻 '+r);Game.get('save').save();if(window.__allowRefresh!==false){Game.get('ui').refresh()}}
+};
+
+// ===== REGISTRATION =====
+Game.register('save',SaveManager);
+Game.register('ui',UIManager);
+Game.register('xp',XPManager);
+Game.register('npc',LivingNPCManager);
+Game.register('inventory',InventoryManager);
+Game.register('journal',JournalManager);
+Game.register('player',PlayerManager);
+Game.register('radio',RadioManager);
+Engine.Services.register('save',SaveManager);
+Engine.Services.register('ui',UIManager);
+Engine.Services.register('xp',XPManager);
+Engine.Services.register('npc',LivingNPCManager);
+Engine.Services.register('inventory',InventoryManager);
+Engine.Services.register('journal',JournalManager);
+Engine.Services.register('player',PlayerManager);
+Engine.Services.register('radio',RadioManager);
+
+
+
+class BaseEntity{
+ constructor(){this.active=true;}
+ init(){}
+ update(dt){}
+ render(){}
+ destroy(){this.active=false;}
+}
+
+
+class MovementComponent{
+ constructor(speed=1.6){this.speed=speed;}
+ move(entity,dt){
+   entity.t+=dt*3.6;
+   entity.x+=this.speed*60*dt;
+   if(entity.x>window.innerWidth+80) entity.x=-80;
+   entity.y=140+Math.sin(entity.t)*14;
+ }
+}
+
+class ClickComponent{
+ constructor(onClick){this.onClick=onClick;}
+ bind(el){el.addEventListener('click',this.onClick);}
+}
+
+
+
+class AnimationComponent{
+ constructor(img){this.img=img;}
+ update(entity){
+  this.img.style.transform=`translateY(${Math.sin(entity.t)*4}px) rotate(${Math.sin(entity.t)*5}deg)`;
+ }
+}
+
+class SpeechComponent{
+ constructor(lines=[]){this.lines=lines;}
+ speak(){
+  const b=document.getElementById('steveSpeech');
+  if(!b||!this.lines.length)return;
+  b.textContent=this.lines[Math.floor(Math.random()*this.lines.length)];
+  b.style.display='block';
+  b.style.left=(window.innerWidth/2-100)+'px';
+  b.style.top='90px';
+  setTimeout(()=>b.style.display='none',2200);
+ }
+}
+
+class LootComponent{
+ constructor(xp=25){this.xp=xp;}
+ collect(){
+   if(window.Game&&Game.get){Game.get('xp').add(this.xp);}
+ }
+}
+
+
+class AIComponent{
+  constructor(home='Old Pier'){
+    this.home=home;
+    this.targets=['Old Pier','Hidden Cove','Punk Dunes','Lost Lighthouse'];
+    this.timer=0;
+  }
+  update(entity,dt){
+    this.timer+=dt;
+    if(this.timer>12){
+      this.timer=0;
+      entity.target=this.targets[Math.floor(Math.random()*this.targets.length)];
+      if(window.Game && Game.state && Game.state.world){
+        Game.state.steveLocation=entity.target;
+      }
+    }
+  }
+}
+
+class EventComponent{
+  trigger(entity){
+    if(window.Engine && Engine.Events){
+      Engine.Events.emit('npc:interaction',{name:'Steve',location:Game.state.steveLocation});
+    }
+  }
+}
+
+
+class FishSchoolEntity extends BaseEntity{
+ constructor(layer){
+   super(); this.layer=layer; this.fish=[];
+   for(let i=0;i<8;i++){
+     const f=document.createElement('div');
+     f.className='lagoonFish';
+     f.textContent=i%2?'🐟':'🐠';
+     this.layer.appendChild(f);
+     this.fish.push({el:f,off:i*28});
+   }
+   this.t=0;
+ }
+ update(dt){
+   this.t+=dt*70;
+   this.fish.forEach((f,i)=>{
+     let x=((this.t+f.off)%(window.innerWidth+200))-100;
+     let y=220+Math.sin((this.t+f.off)/35+i)*35;
+     f.el.style.left=x+'px';
+     f.el.style.top=y+'px';
+   });
+ }
+}
+
+class WeatherManager{
+ constructor(){this.states=['Sunny','Fog','Wind'];this.i=0;}
+ tick(){
+   this.i=(this.i+1)%this.states.length;
+   document.body.dataset.weather=this.states[this.i];
+ }
+}
+
+
+
+class CrabEntity extends BaseEntity{
+ constructor(){
+   super();
+   this.el=document.createElement('div');
+   this.el.textContent='🦀';
+   this.el.style.position='fixed';
+   this.el.style.bottom='22px';
+   this.el.style.left='-60px';
+   this.el.style.fontSize='28px';
+   document.body.appendChild(this.el);
+   this.x=-60;
+   this.dir=1;
+ }
+ update(dt){
+   this.x+=35*dt*this.dir;
+   if(this.x>window.innerWidth-40)this.dir=-1;
+   if(this.x<-60)this.dir=1;
+   this.el.style.left=this.x+'px';
+ }
+}
+
+class GullFlockEntity extends BaseEntity{
+ constructor(){
+   super();
+   this.el=document.createElement('div');
+   this.el.style.position='fixed';
+   this.el.style.top='70px';
+   this.el.style.left='-200px';
+   this.el.style.fontSize='26px';
+   this.el.textContent='🐦 🐦 🐦';
+   document.body.appendChild(this.el);
+   this.x=-200;
+ }
+ update(dt){
+   this.x+=120*dt;
+   if(this.x>window.innerWidth+200)this.x=-220;
+   this.el.style.left=this.x+'px';
+ }
+}
+
+class WaveManager{
+ update(dt){
+   document.body.style.backgroundPosition='0px '+(performance.now()/80%40)+'px';
+ }
+}
+
+
+class SealSvenEntity extends BaseEntity{
+ constructor(){
+   super();
+   this.el=document.createElement('div');
+   this.el.textContent='🦭';
+   Object.assign(this.el.style,{position:'fixed',left:'-80px',bottom:'95px',fontSize:'34px'});
+   document.body.appendChild(this.el);
+   this.x=-80; this.t=0;
+ }
+ update(dt){
+   this.t+=dt*2;
+   this.x+=55*dt;
+   if(this.x>window.innerWidth+60) this.x=-80;
+   this.el.style.left=this.x+'px';
+   this.el.style.bottom=(95+Math.sin(this.t)*18)+'px';
+ }
+}
+
+class RegionManager{
+ constructor(){
+   this.regions=['Old Pier','Hidden Cove','Punk Dunes','Lost Lighthouse'];
+   this.current='Old Pier';
+   this.timer=0;
+ }
+ update(dt){
+   this.timer+=dt;
+   if(this.timer>20){
+      this.timer=0;
+      this.current=this.regions[(this.regions.indexOf(this.current)+1)%this.regions.length];
+      const feed=document.getElementById('liveFeedText');
+      if(feed) feed.textContent='🌍 Region active: '+this.current;
+   }
+ }
+}
+
+
+class DayNightManager extends BaseEntity{
+ constructor(){super();this.t=0;this.day=true;}
+ update(dt){
+   this.t+=dt;
+   if(this.t>30){
+      this.t=0;
+      this.day=!this.day;
+      document.body.style.filter=this.day?'brightness(1)':'brightness(0.78)';
+      const feed=document.getElementById('liveFeedText');
+      if(feed) feed.textContent=this.day?'☀️ Sunrise over Hidden Lagoon':'🌙 Night falls over Hidden Lagoon';
+   }
+ }
+}
+
+class WaterCurrentSystem extends BaseEntity{
+ constructor(){super();this.offset=0;}
+ update(dt){
+   this.offset+=dt*18;
+   const layer=document.getElementById('fishLayer');
+   if(layer) layer.style.transform=`translateX(${Math.sin(this.offset/12)*8}px)`;
+ }
+}
+
+class BoidFishSchool extends BaseEntity{
+ constructor(layer){
+   super();
+   this.layer=layer;
+   this.fish=[];
+   for(let i=0;i<14;i++){
+      const e=document.createElement('div');
+      e.className='lagoonFish';
+      e.textContent='🐟';
+      layer.appendChild(e);
+   }
+ }
+ update(dt){
+   let t=performance.now()/350;
+   [...this.layer.children].forEach((e,i)=>{
+      e.style.left=((t*60+i*26)%(window.innerWidth+160)-80)+'px';
+      e.style.top=(260+Math.sin(t+i*0.7)*24)+'px';
+   });
+ }
+}
+
+
+class NPCScheduler extends BaseEntity{
+ constructor(){super();this.t=0;this.hours=8;}
+ update(dt){
+   this.t+=dt;
+   if(this.t<8)return;
+   this.t=0;
+   this.hours=(this.hours+1)%24;
+   const npc=Game.state.world?.npcs;
+   if(!npc)return;
+   npc.steve.currentLocation=this.hours<12?'Old Pier':this.hours<18?'Hidden Cove':'Lost Lighthouse';
+   npc.sealSven.currentLocation=this.hours<16?'Old Pier':'Hidden Cove';
+   const s=document.getElementById('steveStatus');
+   if(s)s.innerHTML='<b>'+npc.steve.currentLocation+'</b><br>🕒 '+String(this.hours).padStart(2,'0')+':00';
+   const f=document.getElementById('liveFeedText');
+   if(f)f.textContent='🌍 NPC schedule updated ('+this.hours+':00)';
+ }
+}
+
+
+class ScannerManager extends BaseEntity{
+ constructor(){super();this.timer=0;}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<1)return;
+   this.timer=0;
+   const npc=Game.state.world?.npcs?.steve;
+   if(!npc)return;
+   const feed=document.getElementById('liveFeedText');
+   if(feed){
+      const msg={
+        'Old Pier':'📡 Strong signal detected near Old Pier',
+        'Hidden Cove':'📡 Medium signal from Hidden Cove',
+        'Lost Lighthouse':'📡 Weak signal from Lost Lighthouse'
+      };
+      feed.textContent=msg[npc.currentLocation]||'📡 No signal';
+   }
+ }
+}
+
+class EncounterManager extends BaseEntity{
+ constructor(){super();this.cooldown=0;}
+ update(dt){
+   this.cooldown+=dt;
+   if(this.cooldown<12)return;
+   this.cooldown=0;
+   const w=Game.state.world?.npcs;
+   if(!w)return;
+   if(w.steve.currentLocation===w.sealSven.currentLocation){
+      const j=Game.get('journal');
+      if(j) j.add('🦭 Seal Sven met Steve at '+w.steve.currentLocation);
+      const f=document.getElementById('liveFeedText');
+      if(f) f.textContent='🎉 Steve and Seal Sven met at '+w.steve.currentLocation;
+   }
+ }
+}
+
+
+class MoodManager extends BaseEntity{
+ constructor(){super();this.timer=0;this.moods=['😄 Curious','😴 Sleeping','🍟 Hungry','🧐 Investigating','😡 Grumpy'];}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<10)return;
+   this.timer=0;
+   const npcs=Game.state.world?.npcs;
+   if(!npcs)return;
+   Object.values(npcs).forEach(n=>n.mood=this.moods[Math.floor(Math.random()*this.moods.length)]);
+ }
+}
+class ForageManager extends BaseEntity{
+ constructor(){super();this.timer=0;}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<6)return;
+   this.timer=0;
+   const loot=['🐟 Fish','🍟 Fries','🪶 Feather','🦀 Shell'];
+   const item=loot[Math.floor(Math.random()*loot.length)];
+   const f=document.getElementById('liveFeedText');
+   if(f)f.textContent='🌿 Steve found '+item;
+   Game.get('journal')?.add('🌿 Steve found '+item);
+ }
+}
+
+
+class WorldEventDirector extends BaseEntity{
+ constructor(){super();this.timer=0;
+ this.events=[
+ '🌊 A school of mackerel rushed through Hidden Cove.',
+ '🦀 Cranky Krabbe found fresh seaweed.',
+ '🐦 Steve stole fries from the pier.',
+ '📻 Shelter Radio picked up a mysterious transmission.',
+ '🦭 Seal Sven chased gulls away from the beach.'
+ ];
+ }
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<15)return;
+   this.timer=0;
+   const msg=this.events[Math.floor(Math.random()*this.events.length)];
+   const feed=document.getElementById('liveFeedText');
+   if(feed)feed.textContent=msg;
+   Game.get('journal')?.add(msg);
+ }
+}
+
+class ScannerPulse extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   const btn=document.getElementById('pocketRadarBtn');
+   if(btn){
+      btn.style.boxShadow=`0 0 ${18+Math.sin(this.t*4)*10}px rgba(255,212,0,.9)`;
+   }
+ }
+}
+
+
+class BehaviourDirector extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   if(this.t<5)return;
+   this.t=0;
+   const npcs=Game.state.world?.npcs;
+   if(!npcs)return;
+   const moods=['Searching for fish','Watching the tide','Stealing snacks','Listening to radio','Taking a nap'];
+   Object.values(npcs).forEach(n=>{
+      n.activity=moods[Math.floor(Math.random()*moods.length)];
+   });
+   const list=document.getElementById('npcList');
+   if(list){
+      list.innerHTML='';
+      Object.values(npcs).forEach(n=>{
+        const li=document.createElement('li');
+        li.textContent=`${n.name} — ${n.currentLocation} — ${n.activity}`;
+        list.appendChild(li);
+      });
+   }
+ }
+}
+
+class AmbientSoundPulse extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   const feed=document.getElementById('dailyText');
+   if(feed && Math.floor(this.t)%20==0){
+      feed.textContent='🌊 Waves, gulls and distant radio static drift across the lagoon...';
+   }
+}
+}
+
+
+class EcosystemManager extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+  this.t+=dt;
+  if(this.t<8)return;
+  this.t=0;
+  const msgs=[
+   '🐟 Herring school moved into Hidden Cove.',
+   '🦀 Cranky Krabbe is guarding a shell.',
+   '🐦 Steve is circling above Old Pier.',
+   '🌊 Tide is rising around the lagoon.',
+   '📻 A strange scanner echo was detected.'
+  ];
+  const m=msgs[Math.floor(Math.random()*msgs.length)];
+  const feed=document.getElementById('liveFeedText');
+  if(feed)feed.textContent=m;
+  Game.get('journal')?.add(m);
+ }
+}
+
+class ScannerSignalManager extends BaseEntity{
+ update(){
+   const npc=Game.state.world?.npcs?.steve;
+   const btn=document.getElementById('pocketRadarBtn');
+   if(!npc||!btn)return;
+   const glow={ 'Old Pier':'0 0 35px #00ff88','Hidden Cove':'0 0 35px #ffee55','Lost Lighthouse':'0 0 35px #ff6666'};
+   btn.style.boxShadow=glow[npc.currentLocation]||'0 0 20px #ffd400';
+ }
+}
+
+
+class TideManager extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   const layer=document.getElementById('fishLayer');
+   if(layer){
+      layer.style.transform=`translate(${Math.sin(this.t*0.6)*10}px,${Math.sin(this.t*0.3)*3}px)`;
+   }
+ }
+}
+
+class BirdDirector extends BaseEntity{
+ constructor(){super();this.timer=0;}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<18)return;
+   this.timer=0;
+   const feed=document.getElementById('liveFeedText');
+   if(feed) feed.textContent='🐦 A flock of gulls followed Steve across the lagoon.';
+   Game.get('journal')?.add('🐦 Gull flock followed Steve.');
+ }
+}
+
+class SpriteAnimationManager extends BaseEntity{
+ update(dt){
+   const s=document.getElementById('steveSprite');
+   if(s){
+      s.style.filter=`drop-shadow(0 0 ${8+Math.sin(performance.now()/180)*6}px rgba(255,255,180,.9))`;
+   }
+ }
+}
+
+
+class WildlifeDirector extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   if(this.t<10)return;
+   this.t=0;
+   const msgs=[
+    '🐟 Mackerel scattered as Steve swooped.',
+    '🦀 Cranky Krabbe hid beneath a rock.',
+    '🦭 Seal Sven chased a fish school.',
+    '🌊 The current carried shells onto the beach.',
+    '🐦 Steve spotted something shiny offshore.'
+   ];
+   const m=msgs[Math.floor(Math.random()*msgs.length)];
+   const f=document.getElementById('liveFeedText');
+   if(f)f.textContent=m;
+   Game.get('journal')?.add(m);
+ }
+}
+
+class SmartCrabAI extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   const crab=document.querySelector('.crab');
+   if(crab){
+      crab.style.transform=`translateY(${Math.sin(this.t*2)*4}px) scale(${1+Math.sin(this.t)*0.04})`;
+   }
+ }
+}
+
+class OceanCurrentFX extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   document.body.style.backgroundPosition=`${Math.sin(this.t*0.4)*12}px ${Math.cos(this.t*0.25)*10}px`;
+ }
+}
+
+
+class EcosystemBrain extends BaseEntity{
+ constructor(){super();this.timer=0;}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<12)return;
+   this.timer=0;
+   const world=Game.state.world?.npcs;
+   if(!world)return;
+   if(world.steve.currentLocation===world.sealSven.currentLocation){
+      Game.get('journal')?.add('🤝 Steve and Seal Sven are exploring together.');
+   }
+   if(world.steve.currentLocation==='Hidden Cove'){
+      Game.get('journal')?.add('🐟 Fish became nervous near Hidden Cove.');
+   }
+ }
+}
+
+class BoidSchoolV2 extends BaseEntity{
+ constructor(){super();this.phase=0;}
+ update(dt){
+   this.phase+=dt;
+   document.querySelectorAll('.lagoonFish').forEach((f,i)=>{
+      f.style.transform=`translate(${Math.sin(this.phase+i)*4}px,${Math.cos(this.phase*1.4+i)*3}px)`
+   });
+ }
+}
+
+
+class CreatureStateManager extends BaseEntity{
+ constructor(){super();this.timer=0;this.states=['patrol','forage','hide','rest'];}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<7)return;
+   this.timer=0;
+   const npcs=Game.state.world?.npcs;
+   if(!npcs)return;
+   Object.values(npcs).forEach(n=>n.state=this.states[Math.floor(Math.random()*this.states.length)]);
+   const feed=document.getElementById('liveFeedText');
+   if(feed)feed.textContent='🧠 Wildlife switched behaviour state.';
+ }
+}
+class SpriteSequenceManager extends BaseEntity{
+ constructor(){super();this.frame=0;this.t=0;}
+ update(dt){
+   this.t+=dt;
+   if(this.t<0.12)return;
+   this.t=0;
+   this.frame=(this.frame+1)%4;
+   const s=document.getElementById('steveSprite');
+   if(s){s.dataset.frame=this.frame;s.style.transform+=` scale(${1+this.frame*0.01})`;}
+ }
+}
+
+
+class FrameAnimationSystem extends BaseEntity{
+ constructor(){super();this.time=0;this.animations={};}
+ register(id,frames,fps=8){
+   this.animations[id]={frames,index:0,fps,acc:0};
+ }
+ update(dt){
+   Object.values(this.animations).forEach(a=>{
+      a.acc+=dt;
+      if(a.acc>=1/a.fps){
+         a.acc=0;
+         a.index=(a.index+1)%Math.max(a.frames.length,1);
+      }
+   });
+ }
+}
+
+class BehaviourMemorySystem extends BaseEntity{
+ constructor(){super();this.timer=0;}
+ update(dt){
+   this.timer+=dt;
+   if(this.timer<9)return;
+   this.timer=0;
+   const npcs=Game.state.world?.npcs;
+   if(!npcs)return;
+   Object.values(npcs).forEach(n=>{
+      n.lastBehaviour=n.state||'patrol';
+      n.lastSeen=Date.now();
+   });
+   const feed=document.getElementById('liveFeedText');
+   if(feed) feed.textContent='🧠 Wildlife memory updated.';
+ }
+}
+
+
+class SpritePipeline extends BaseEntity{
+ constructor(){super();this.cache={};}
+ registerFolder(name,count){
+   this.cache[name]=Array.from({length:count},(_,i)=>`${name}/${String(i+1).padStart(4,'0')}.png`);
+ }
+ getFrame(name,index){
+   const a=this.cache[name]||[];
+   return a.length?a[index%a.length]:null;
+ }
+}
+class BoidDirector extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   document.querySelectorAll('.lagoonFish').forEach((f,i)=>{
+      const x=Math.sin(this.t*2+i)*6;
+      const y=Math.cos(this.t*1.5+i)*4;
+      f.style.transform=`translate(${x}px,${y}px)`;
+   });
+ }
+}
+
+
+class AssetStreamingEngine extends BaseEntity{
+ constructor(){super();this.queue=[];this.loaded={};}
+ queueFolder(folder,count){
+   for(let i=1;i<=count;i++)this.queue.push(`${folder}/${String(i).padStart(4,'0')}.png`);
+ }
+ update(){
+   if(!this.queue.length)return;
+   const file=this.queue.shift();
+   const img=new Image();
+   img.src=file;
+   this.loaded[file]=img;
+ }
+}
+class SpriteStateController extends BaseEntity{
+ update(){
+   const npc=Game.state.world?.npcs?.steve;
+   if(!npc)return;
+   npc.spriteState=npc.state||'idle';
+ }
+}
+
+
+
+class StateAnimationDirector extends BaseEntity{
+ update(){
+   const npcs=Game.state.world?.npcs;
+   if(!npcs)return;
+   Object.values(npcs).forEach(n=>{
+      switch(n.state){
+        case 'forage': n.spriteState='eat'; break;
+        case 'patrol': n.spriteState='fly'; break;
+        case 'rest': n.spriteState='idle'; break;
+        case 'hide': n.spriteState='hide'; break;
+        default: n.spriteState='idle';
+      }
+   });
+ }
+}
+
+
+class SpriteRuntimeIntegrator extends BaseEntity{
+ update(){
+   const s=document.getElementById('steveSprite');
+   const npc=Game.state.world?.npcs?.steve;
+   if(!s||!npc)return;
+   s.dataset.state=npc.spriteState||'idle';
+   s.dataset.location=npc.currentLocation||'Old Pier';
+   if(npc.spriteState==='fly') s.style.opacity='1';
+   if(npc.spriteState==='hide') s.style.opacity='0.75';
+ }
+}
+
+class RuntimeAnimationEngine extends BaseEntity{
+ constructor(){super();this.bindings=[];}
+ bind(id,pipeline,stateGetter,img){
+   this.bindings.push({id,pipeline,stateGetter,img,frame:0,t:0});
+ }
+ update(dt){
+   this.bindings.forEach(b=>{
+      b.t+=dt;
+      if(b.t<0.1)return;
+      b.t=0;
+      b.frame++;
+      const p=b.pipeline.getFrame(b.id,b.frame);
+      if(p){b.img.dataset.sprite=p;}
+   });
+ }
+}
+
+
+
+
+class MultiCharacterAnimationSystem extends BaseEntity{
+ constructor(){super();this.characters={};}
+ register(id,element,pipeline){
+   this.characters[id]={element,pipeline,frame:0,time:0};
+ }
+ update(dt){
+   for(const c of Object.values(this.characters)){
+     c.time+=dt;
+     if(c.time<0.1) continue;
+     c.time=0;
+     c.frame++;
+     const src=c.pipeline.getFrame('steve',c.frame);
+     if(src) c.element.dataset.sprite=src;
+   }
+ }
+}
+
+class AnimationStateMachine extends BaseEntity{
+ constructor(){
+   super();
+   this.states={
+     idle:{fps:4,start:1,end:4},
+     fly:{fps:10,start:5,end:12},
+     eat:{fps:8,start:13,end:18},
+     hide:{fps:3,start:19,end:24}
+   };
+ }
+ update(){
+   const npc=Game.state.world?.npcs?.steve;
+   const s=document.getElementById('steveSprite');
+   if(!npc||!s)return;
+   const st=this.states[npc.spriteState]||this.states.idle;
+   s.dataset.animFps=st.fps;
+   s.dataset.animRange=`${st.start}-${st.end}`;
+   s.dataset.animState=npc.spriteState||'idle';
+ }
+}
+
+class SpriteFrameRenderer extends BaseEntity{
+ update(){
+   const s=document.getElementById('steveSprite');
+   if(!s || !s.dataset.sprite) return;
+   if(s.src.indexOf(s.dataset.sprite)===-1){
+      s.src=s.dataset.sprite;
+   }
+ }
+}
+
+
+
+class SpriteCanvasRenderer{
+ constructor(img){
+   this.img=img;
+   this.canvas=document.createElement('canvas');
+   this.canvas.width=128;
+   this.canvas.height=128;
+   this.canvas.style.position='fixed';
+   this.canvas.style.pointerEvents='none';
+   this.canvas.style.zIndex=9499;
+   img.parentNode.insertBefore(this.canvas,img);
+   this.ctx=this.canvas.getContext('2d');
+ }
+ render(){
+   this.canvas.style.left=this.img.style.left;
+   this.canvas.style.top=this.img.style.top;
+   this.ctx.clearRect(0,0,128,128);
+   this.ctx.drawImage(this.img,0,0,128,128);
+ }
+}
+
+
+// BUILD1114 Sprite Sheet support
+
+// BUILD1115
+
+
+class RadarScannerUI extends BaseEntity{
+ constructor(){super();this.t=0;}
+ update(dt){
+   this.t+=dt;
+   const btn=document.getElementById('pocketRadarBtn');
+   const npc=Game.state.world?.npcs?.steve;
+   if(!btn||!npc)return;
+   const strength={
+      'Old Pier':'STRONG',
+      'Hidden Cove':'MEDIUM',
+      'Lost Lighthouse':'WEAK',
+      'Punk Dunes':'SEARCHING'
+   }[npc.currentLocation]||'NONE';
+   btn.textContent='📡';
+   btn.title='Scanner: '+strength;
+ }
+}
+
+class ScannerEventBridge extends BaseEntity{
+ constructor(){super();this.last='';}
+ update(){
+   const npc=Game.state.world?.npcs?.steve;
+   if(!npc)return;
+   const key=(npc.currentLocation||'')+':' +(npc.spriteState||'idle');
+   if(key===this.last)return;
+   this.last=key;
+   const feed=document.getElementById('liveFeedText');
+   if(feed){
+      feed.textContent='📡 Scanner: Steve '+(npc.spriteState||'idle')+' @ '+npc.currentLocation;
+   }
+ }
+}
+
+class AnimationGraphManager extends BaseEntity{
+ constructor(){super();this.prev='';}
+ update(){
+   const npc=Game.state.world?.npcs?.steve;
+   if(!npc) return;
+   const desired=npc.spriteState||'idle';
+   if(desired!==this.prev){
+      this.prev=desired;
+      if(window.setSteveAnimation) window.setSteveAnimation(desired==='patrol'?'fly':desired);
+   }
+ }
+}
+
+class SpriteSheetAnimator{
+ constructor(ctx,img){
+   this.ctx=ctx; this.img=img;
+   this.sheet=new Image();
+   this.frameWidth=64; this.frameHeight=64;
+   this.frames=4; this.frame=0; this.acc=0; this.fps=8;
+ }
+ load(src,frames,w=64,h=64,fps=8){
+   this.sheet.src=src;
+   this.frames=frames; this.frameWidth=w; this.frameHeight=h; this.fps=fps;
+ }
+ update(dt){
+   this.acc+=dt;
+   if(this.acc>=1/this.fps){this.acc=0;this.frame=(this.frame+1)%this.frames;}
+ }
+ render(x=0,y=0){
+   if(!this.sheet.complete) return;
+   this.ctx.clearRect(0,0,128,128);
+   this.ctx.drawImage(this.sheet,
+      this.frame*this.frameWidth,0,this.frameWidth,this.frameHeight,
+      x,y,128,128);
+ }
+}
+
+class SpriteStripAnimator{
+ constructor(img){
+  this.img=img;
+  this.state='idle';
+  this.frame=0;
+  this.acc=0;
+  this.states={
+    idle:{src:'sprites/steve/idle.png',fps:6},
+    walk:{src:'sprites/steve/walk.png',fps:10},
+    fly:{src:'sprites/steve/fly.png',fps:12}
+  };
+ }
+ play(name){
+   if(!this.states[name]||this.state===name) return;
+   this.state=name;
+   this.frame=0;
+   this.img.dataset.anim=name;
+   this.img.src=this.states[name].src;
+ }
+ update(dt){
+   this.acc+=dt;
+   const fps=this.states[this.state].fps;
+   if(this.acc>=1/fps){
+      this.acc=0;
+      this.frame++;
+      this.img.dataset.frame=this.frame;
+   }
+ }
+}
+
+class SteveEntity extends BaseEntity{
+ constructor(img,shadow){
+   super();
+   this.img=img;this.shadow=shadow;
+   this.x=-80;this.y=140;this.t=0; this.movement=new MovementComponent(1.6); this.animation=new AnimationComponent(img); this.speech=new SpeechComponent(['Mine!','Fries!','Mackerel!']); this.loot=new LootComponent(25); this.ai=new AIComponent(); this.events=new EventComponent(); this.target='Old Pier';
+ }
+ update(dt){
+   this.ai.update(this,dt);
+   this.movement.move(this,dt);
+   this.img.style.left=this.x+'px';
+   this.img.style.top=this.y+'px';
+   this.t+=dt*8;
+const flap=Math.sin(this.t)*18;
+this.img.style.transform=`translateY(${Math.sin(this.t*0.8)*10}px) rotate(${flap}deg) scale(${1+Math.sin(this.t)*0.04})`;
+   this.shadow.style.left=(this.x+10)+'px';
+   this.shadow.style.top=(this.y+48)+'px';
+   this.animation.update(this);
+ }
+}
+
+// ===== UI FUNCTIONS =====
+function applyTheme(){
+ const themes={
+  'Beach Cat':'linear-gradient(180deg,#2196f3,#0d47a1)',
+  'Punk Cat':'linear-gradient(180deg,#333,#000)',
+  'Golf Cat':'linear-gradient(180deg,#4caf50,#1b5e20)',
+  'Desert Dave':'linear-gradient(180deg,#c49a6c,#8d6e63)'
+ };
+ document.body.style.background=themes[Game.state.player.activeCat]||'#071629'
+}
+
+function applyCharacterGlow(){
+ const colors={
+  'Beach Cat':{border:'#ff4fa3',glow:'0 0 25px rgba(255,79,163,.9)'},
+  'Punk Cat':{border:'#ff00ff',glow:'0 0 25px rgba(255,0,255,.9)'},
+  'Golf Cat':{border:'#7cff4d',glow:'0 0 25px rgba(124,255,77,.9)'},
+  'Desert Dave':{border:'#ff9d2e',glow:'0 0 25px rgba(255,157,46,.9)'}
+ };
+ const cfg=colors[Game.state.player.activeCat];
+ if(cfg){
+  const mascot=document.getElementById('activeMascot');
+  if(mascot){mascot.style.filter=`drop-shadow(0 0 12px ${cfg.border}) drop-shadow(0 0 24px ${cfg.border}) drop-shadow(0 0 48px ${cfg.border})`}
+ }
+}
+
+function setCat(name,el){
+ if(!Game.state.player)Game.state.player={};
+ Game.state.player.activeCat=name;
+ localStorage.setItem(KEY,JSON.stringify(Game.state));
+ document.querySelectorAll('.cat').forEach(x=>x.classList.remove('sel'));
+ if(el)el.classList.add('sel');
+ renderHomeUI(Math.floor((Game.state.player.xp||0)/100)+1);
+ applyTheme();
+ applyCharacterGlow();
+ const mascot=document.getElementById('activeMascot');
+ const map={'Beach Cat':'cats/frilagdbeachkatt.png','Punk Cat':'cats/frilagdpunkkatt.png','Golf Cat':'cats/frilagdgolfkatt.png','Desert Dave':'cats/frilagddesertdave.png'};
+ if(mascot&&map[name])mascot.src=map[name]
+}
+
+function renderHomeUI(lvl){
+ const heroes={'Beach Cat':'🌴','Punk Cat':'🛹','Golf Cat':'⛳','Desert Dave':'🌵'};
+ const map={'Beach Cat':'cats/frilagdbeachkatt.png','Punk Cat':'cats/frilagdpunkkatt.png','Golf Cat':'cats/frilagdgolfkatt.png','Desert Dave':'cats/frilagddesertdave.png'};
+ const heroMap={'Beach Cat':'cats/beachcat.jpg','Punk Cat':'cats/punkcat.jpg','Golf Cat':'cats/golfcat.jpg','Desert Dave':'cats/desertdave.jpg'};
+ const xpEl=document.getElementById('xp');if(xpEl)xpEl.textContent=Game.state.player.xp;
+ if(window.heroLevel)heroLevel.textContent=lvl;
+ if(window.heroRescues)heroRescues.textContent=Game.state.player.rescues;
+ if(window.heroImg){heroImg.src=heroMap[Game.state.player.activeCat]||heroMap['Golf Cat'];heroImg.style.objectFit='cover'}
+ const mascot=document.getElementById('activeMascot');if(mascot)mascot.src=map[Game.state.player.activeCat]||map['Golf Cat']
+}
+
+function xpPopup(txt){
+ const d=document.createElement('div');
+ d.className='xpPop';
+ d.textContent=txt;
+ document.body.appendChild(d);
+ setTimeout(()=>d.remove(),6500)
+}
+
+function exploreArea(){
+ const loot=['🪶 You found one of Steve\'s feathers! (+20 XP)','🐟 You caught a fish.','📻 A weak radio signal was detected.','🗺️ You discovered a hidden trail.','🍟 Snack Bandit dropped some fries.'];
+ const t=loot[Math.floor(Math.random()*loot.length)];
+ document.getElementById('exploreResult').textContent=t;
+ if(window.Game&&Game.get&&Game.get('xp'))Game.get('xp').add(20)
+}
+
+function dailyDiscovery(){
+ const msgs=['🐦 Steve dropped a mysterious feather.','📻 Strange radio burst detected.','🐱 Feline Signal intensity increased.','🦀 Krabban reluctantly approved one shell.','📦 A dusty booster washed ashore.'];
+ const t=msgs[Math.floor(Math.random()*msgs.length)];
+ if(window.Game&&Game.get){
+   Game.get('xp').add(15);
+   if(Game.state.journal)Game.state.journal.push("🌊 "+t);
+   Game.get('save').save()
+ }
+}
+
+function generateWorldEvent(){
+ const e=['🐦 Steve stole fries from Snack Bandit.','📻 Signal Sam detected a strange transmission.','🦀 Cranky Krabbe found a shiny coin.','🦭 Seal Sven scared away hungry gulls.','🗺️ Map Magnus discovered a hidden shortcut.','🌙 Midnight Maja left mysterious paw prints.'];
+ const ev=e[Math.floor(Math.random()*e.length)];
+ document.getElementById('liveFeedText').textContent=ev;
+ if(window.Game&&Game.get&&Game.get('journal')){Game.get('journal').add(ev)}
+ if(window.Game&&Game.get&&Game.get('xp')){Game.get('xp').add(15)}
+}
+
+function openCatPack(){
+ const o=document.getElementById('packFx');
+ o.style.display='flex';
+ setTimeout(()=>{o.style.display='none'},2300)
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener('DOMContentLoaded',()=>{
+ const assets=['world/assets/seagullsteve.png','cats/beachcat.jpg','cats/punkcat.jpg','cats/golfcat.jpg','cats/desertdave.jpg'];
+ Engine.AssetManager.preload(assets);
+
+ Game.state=JSON.parse(localStorage.getItem(KEY)||'{}');
+ Game.state.player=Game.state.player||{};
+ Game.state.player.xp=Game.state.player.xp||0;
+ Game.state.player.activeCat=Game.state.player.activeCat||'Golf Cat';
+ Game.state.player.rescues=Game.state.player.rescues||0;
+ Game.state.journal=Game.state.journal||[];
+ Game.state.steveLocation=Game.state.steveLocation||'Old Pier';
+
+ Game.get('save').migrate();
+ Game.get('npc').migrate();
+
+ renderHomeUI(Math.floor(Game.state.player.xp/100)+1);
+ applyTheme();
+ applyCharacterGlow();
+ 
+ Game.get('radio').broadcast();
+ 
+ Engine.WorldLoop.start();
+ 
+ Engine.EventManager.addInterval(()=>{
+   if(window.Game&&Game.get&&Game.get('npc')){Game.get('npc').tick()}
+ });
+
+ // Steve movement
+ Engine.EventManager.addInterval(()=>{
+   const places=['Old Pier','Hidden Cove','Punk Dunes','Lost Lighthouse'];
+   Game.state.steveLocation=places[Math.floor(Math.random()*places.length)];
+   const s=document.getElementById('steveStatus');
+   if(s)s.innerHTML='<b>'+Game.state.steveLocation+'</b>';
+ },30000);
+
+ // Spawn particles
+ Engine.EventManager.addInterval(()=>{
+   const b=document.createElement('div');
+   b.className='waterBubble';
+   const s=20+Math.random()*80;
+   b.style.width=s+'px';b.style.height=s+'px';
+   b.style.left=(Math.random()*100)+'vw';
+   b.style.animationDuration=(8+Math.random()*10)+'s';
+   document.body.appendChild(b);
+   setTimeout(()=>b.remove(),20000)
+ },700);
+
+ // Fish spawning
+ Engine.EventManager.addInterval(()=>{
+   const layer=document.getElementById('fishLayer');if(!layer)return;
+   if(layer.children.length>8)return;
+   const f=document.createElement('div');
+   f.className='lagoonFish';
+   f.textContent=Math.random()<0.5?'🐟':'🐠';
+   f.style.top=(120+Math.random()*(window.innerHeight-250))+'px';
+   f.style.animationDuration=(18+Math.random()*12)+'s';
+   layer.appendChild(f);
+   setTimeout(()=>f.remove(),32000)
+ },1800);
+
+ // Fireflies
+ Engine.EventManager.addInterval(()=>{
+   const f=document.createElement('div');
+   f.className='firefly';
+   f.textContent='✨';
+   f.style.left=(Math.random()*100)+'vw';
+   f.style.top=(60+Math.random()*35)+'vh';
+   document.body.appendChild(f);
+   setTimeout(()=>f.remove(),10000)
+ },2200);
+
+ // Crabs
+ for(let i=0;i<2;i++){
+   const c=document.createElement('div');
+   c.className='crab';
+   c.textContent='🦀';
+   c.style.animationDelay=(Math.random()*20)+'s';
+   document.body.appendChild(c)
+ }
+
+ 
+// Weather
+const weather=new WeatherManager();
+Engine.EventManager.addInterval(()=>weather.tick(),45000);
+
+// Fish school
+const fishLayer=document.createElement('div');
+fishLayer.id='fishLayer';
+document.body.appendChild(fishLayer);
+Engine.WorldManager.spawn(new FishSchoolEntity(fishLayer));
+
+
+Engine.WorldManager.spawn(new CrabEntity());
+Engine.WorldManager.spawn(new GullFlockEntity());
+Engine.WorldManager.spawn(new WaveManager());
+Engine.WorldManager.spawn(new SealSvenEntity());
+Engine.WorldManager.spawn(new RegionManager());
+Engine.WorldManager.spawn(new DayNightManager());
+Engine.WorldManager.spawn(new WaterCurrentSystem());
+Engine.WorldManager.spawn(new BoidFishSchool(fishLayer));
+Engine.WorldManager.spawn(new NPCScheduler());
+Engine.WorldManager.spawn(new ScannerManager());
+Engine.WorldManager.spawn(new EncounterManager());
+Engine.WorldManager.spawn(new MoodManager());
+Engine.WorldManager.spawn(new ForageManager());
+Engine.WorldManager.spawn(new WorldEventDirector());
+Engine.WorldManager.spawn(new ScannerPulse());
+Engine.WorldManager.spawn(new BehaviourDirector());
+Engine.WorldManager.spawn(new AmbientSoundPulse());
+Engine.WorldManager.spawn(new EcosystemManager());
+Engine.WorldManager.spawn(new ScannerSignalManager());
+Engine.WorldManager.spawn(new TideManager());
+Engine.WorldManager.spawn(new BirdDirector());
+Engine.WorldManager.spawn(new SpriteAnimationManager());
+Engine.WorldManager.spawn(new WildlifeDirector());
+Engine.WorldManager.spawn(new SmartCrabAI());
+Engine.WorldManager.spawn(new OceanCurrentFX());
+Engine.WorldManager.spawn(new EcosystemBrain());
+Engine.WorldManager.spawn(new BoidSchoolV2());
+Engine.WorldManager.spawn(new CreatureStateManager());
+Engine.WorldManager.spawn(new SpriteSequenceManager());
+const frameSystem=new FrameAnimationSystem();
+frameSystem.register('steve',['0001.png','0002.png','0003.png','0004.png'],8);
+Engine.WorldManager.spawn(frameSystem);
+Engine.WorldManager.spawn(new BehaviourMemorySystem());
+const spritePipeline=new SpritePipeline();
+spritePipeline.registerFolder('steve',24);
+spritePipeline.registerFolder('krabba',16);
+spritePipeline.registerFolder('makrill',12);
+spritePipeline.registerFolder('sealsven',20);
+Engine.WorldManager.spawn(spritePipeline);
+Engine.WorldManager.spawn(new BoidDirector());
+const streamer=new AssetStreamingEngine();
+streamer.queueFolder('steve',24);
+streamer.queueFolder('krabba',16);
+streamer.queueFolder('sealsven',20);
+streamer.queueFolder('makrill',12);
+Engine.WorldManager.spawn(streamer);
+Engine.WorldManager.spawn(new SpriteStateController());
+const multiAnim=new MultiCharacterAnimationSystem();
+Engine.WorldManager.spawn(multiAnim);
+const runtimeAnim=new RuntimeAnimationEngine();
+// runtimeAnim.bind moved below image creation
+Engine.WorldManager.spawn(runtimeAnim);
+Engine.WorldManager.spawn(new StateAnimationDirector());
+Engine.WorldManager.spawn(new SpriteRuntimeIntegrator());
+Engine.WorldManager.spawn(new AnimationStateMachine());
+Engine.WorldManager.spawn(new AnimationGraphManager());
+Engine.WorldManager.spawn(new ScannerEventBridge());
+Engine.WorldManager.spawn(new RadarScannerUI());
+Engine.WorldManager.spawn(new SpriteFrameRenderer());
+
+// Steve sprite
+ const layer=document.getElementById('steveLayer');
+ const shadow=document.createElement('div');
+ shadow.id='steveShadow';
+ const img=document.createElement('img');
+ img.id='steveSprite';
+ img.src='world/assets/seagullsteve.png'; img.dataset.anim='fly';
+ layer.appendChild(shadow);
+ layer.appendChild(img);
+
+ multiAnim.register('steve',img,spritePipeline);
+
+ 
+ // BUILD1110A sprite hook
+ runtimeAnim.bind('steve',spritePipeline,()=>Game.state.world?.npcs?.steve?.spriteState,img);
+
+ // Debug animation selector (placeholder for sprite strips)
+ window.setSteveAnimation=function(name){
+   img.dataset.anim=name;
+   img.classList.toggle('steveFlying',name==='fly');
+   const st=document.getElementById('steveStatus');
+   if(st) st.innerHTML='<b>Steve</b><br>Animation: '+name;
+ };
+ window.addEventListener('keydown',(ev)=>{
+   if(ev.key==='1') setSteveAnimation('idle');
+   if(ev.key==='2') setSteveAnimation('walk');
+   if(ev.key==='3') setSteveAnimation('fly');
+ });
+
+const steveCanvas=new SpriteCanvasRenderer(img);
+const sheetAnimator=new SpriteSheetAnimator(steveCanvas.ctx,img);
+sheetAnimator.load('sprites/steve/idle_sheet.png',4,64,64,8);
+const steveAnimator=new SpriteStripAnimator(img);
+window.setSteveAnimation=(n)=>steveAnimator.play(n);
+steveAnimator.play('fly');
+img.classList.add('steveFlying');
+const steveEntity=new SteveEntity(img,shadow);
+Engine.WorldManager.spawn(steveEntity);
+Engine.WorldManager.spawn({update(dt){steveAnimator.update(dt);sheetAnimator.update(dt);steveCanvas.render();sheetAnimator.render();}});
+
+ img.addEventListener('click',()=>{
+   for(let i=0;i<6;i++){
+     const f=document.createElement('div');
+     f.textContent='🪶';
+     f.style.position='fixed';
+     f.style.left=(steveEntity.x+40)+'px';
+     f.style.top=(steveEntity.y+40)+'px';
+     f.style.fontSize='24px';
+     f.style.pointerEvents='none';
+     f.style.animation='fadeUp 3s forwards';
+     document.body.appendChild(f);
+     setTimeout(()=>f.remove(),3000)
+   }
+   steveEntity.speech.speak(); steveEntity.loot.collect(); steveEntity.events.trigger(steveEntity)
+ });
+
+ img.addEventListener('pointerdown',()=>{if(navigator.vibrate)navigator.vibrate(40)});
+});
+
+
+Engine.Events.on('npc:interaction',e=>{
+ const feed=document.getElementById('liveFeedText');
+ if(feed) feed.textContent=`🐦 ${e.name} was seen near ${e.location}`;
+});
+
+window.__allowRefresh=true;
+
+// Cleanup on visibility change
+document.addEventListener('visibilitychange',()=>{
+ document.body.classList.toggle('game-paused',document.hidden)
+});
+
+// ===== BUILD1110A DEBUG =====
+window.addEventListener('keydown', (e)=>{
+  const s=document.getElementById('steveStatus');
+  const sprite=document.getElementById('steveSprite');
+  if(!s||!sprite) return;
+  const map={
+    '1':'idle.png',
+    '2':'walk.png',
+    '3':'fly.png'
+  };
+  if(map[e.key]){
+    s.innerHTML='<b>BUILD1110A TEST</b><br>Animation: '+map[e.key];
+    sprite.style.outline='3px solid #ffd400';
+    sprite.style.filter='drop-shadow(0 0 18px rgba(255,212,0,.9))';
+  }
+});
+
+document.getElementById('pocketRadarBtn')?.addEventListener('click',()=>{
+ const o=document.getElementById('radarOverlay');
+ if(o)o.style.display='flex';
+});
+
+// BUILD1120 additions
+window.setSteveAnimation = window.setSteveAnimation || function(){};
+Engine.EventManager.addInterval(()=>{
+  const npc=Game.state?.world?.npcs?.steve;
+  if(!npc)return;
+  const states=['idle','fly','fly','fly','eat'];
+  npc.spriteState=states[Math.floor(Math.random()*states.length)];
+  if(window.setSteveAnimation) window.setSteveAnimation(npc.spriteState);
+},5000);
+
+
+// BUILD1121
+Engine.EventManager.addInterval(()=>{
+ const npc=Game.state?.world?.npcs?.steve;
+ if(!npc)return;
+ const seq=['idle','fly','walk','fly','eat'];
+ npc.spriteState=seq[Math.floor(Math.random()*seq.length)];
+ if(window.setSteveAnimation) window.setSteveAnimation(npc.spriteState);
+},4000);
+
+// BUILD1124 marker
+window.BUILD1124={
+ features:[
+ 'Sprite Runtime Preparation',
+ 'Animation Graph',
+ 'Multi Character Animation',
+ 'Sprite Pipeline Ready'
+ ]
+};
+
+
+setInterval(()=>{
+ const npc=Game.state?.world?.npcs?.steve;
+ if(!npc)return;
+ const st=npc.spriteState||'idle';
+ const d=document.getElementById('scannerState');
+ const t=document.getElementById('scannerTarget');
+ const dist=document.getElementById('scannerDist');
+ const fill=document.getElementById('scannerFill');
+ if(d)d.textContent='State: '+st.toUpperCase();
+ if(t)t.textContent='Target: STEVE @ '+npc.currentLocation;
+ const pct={'Old Pier':92,'Hidden Cove':68,'Punk Dunes':41,'Lost Lighthouse':24}[npc.currentLocation]||50;
+ if(fill)fill.style.width=pct+'%';
+ if(dist)dist.textContent='Distance: '+Math.round(100-pct)+' m';
+},500);
+
+</script>
+<button id='pocketRadarBtn'>📡</button>
+
+<style>
+#radarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000000;align-items:center;justify-content:center;flex-direction:column}
+#radarScope{width:320px;height:320px;border:4px solid #66ff99;border-radius:50%;
+background:radial-gradient(circle,#083 0,#021 70%,#010 100%);position:relative;overflow:hidden}
+#radarSweep{position:absolute;left:50%;top:50%;width:2px;height:160px;background:#7fffd4;transform-origin:bottom center;animation:spin 2.2s linear infinite}
+#radarBlip{position:absolute;width:10px;height:10px;border-radius:50%;background:#ff0;left:62%;top:38%}
+@keyframes spin{from{transform:translate(-50%,-100%) rotate(0)}to{transform:translate(-50%,-100%) rotate(360deg)}}
+</style>
+<div id="radarOverlay">
+<h2>📡 Pocket Radar</h2>
+<div id="radarScope"><div id="radarSweep"></div><div id="radarBlip"></div></div>
+<button onclick="document.getElementById('radarOverlay').style.display='none'">Close</button>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const target=document.getElementById('scannerTarget');
+  const state=document.getElementById('scannerState');
+  const dist=document.getElementById('scannerDist');
+  const fill=document.getElementById('scannerFill');
+  let d=180;
+  setInterval(()=>{
+    d=Math.max(12,d-(Math.random()*18));
+    if(d<20)d=180;
+    if(target) target.textContent="Target: SEAGULL STEVE";
+    if(state){
+      const s=["FLY","GLIDE","STEAL","EAT"];
+      state.textContent="State: "+s[Math.floor(Math.random()*s.length)];
+    }
+    if(dist) dist.textContent="Distance: "+Math.round(d)+" m";
+    if(fill){
+      const p=Math.max(10,100-d/2);
+      fill.style.width=p+"%";
+    }
+  },900);
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const s=document.getElementById('steveSprite');
+ if(!s) return;
+ s.classList.add('steveFlying');
+ let dir=1,x=-220;
+ setInterval(()=>{
+   x+=4*dir;
+   if(x>window.innerWidth+220)x=-220;
+   s.style.left=x+'px';
+ },16);
+});
+</script>
+
+
+<div id="worldState" style="position:fixed;left:14px;bottom:14px;z-index:999999;background:#102844;border:2px solid #5fc8ff;border-radius:12px;padding:8px 12px;font:12px Arial">
+🌊 Weather: <span id="weatherState">Calm</span><br>
+🕒 World: <span id="worldClock">Day</span>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const weather=['Calm','Windy','Fog','Rain'];
+ let i=0,day=true;
+ setInterval(()=>{
+   i=(i+1)%weather.length;
+   document.getElementById('weatherState').textContent=weather[i];
+   day=!day;
+   document.getElementById('worldClock').textContent=day?'Day':'Night';
+ },10000);
+});
+</script>
+
+
+<div id="miniMapHUD" style="position:fixed;right:18px;bottom:120px;z-index:999999;background:#0b2238;border:2px solid #ffd400;border-radius:14px;padding:10px;color:white;font:12px Arial">
+<b>🗺️ Region</b><br>
+<span id="regionName">Old Pier</span><br>
+<b>🌡️ Tide</b>: <span id="tideState">Low</span>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const regions=['Old Pier','Hidden Cove','Punk Dunes','Lost Lighthouse'];
+ const tides=['Low','Rising','High','Falling'];
+ let i=0;
+ setInterval(()=>{
+   i=(i+1)%regions.length;
+   document.getElementById('regionName').textContent=regions[i];
+   document.getElementById('tideState').textContent=tides[i];
+ },12000);
+});
+</script>
+
+
+<div id="missionHUD" style="position:fixed;left:14px;bottom:18px;z-index:999999;
+background:#102844;border:2px solid #ffd400;border-radius:12px;padding:10px;color:#fff;font:12px Arial">
+<b>🎯 Current Mission</b><br>
+<span id="missionText">Track Steve to Old Pier</span>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const missions=[
+ "Track Steve to Old Pier",
+ "Collect 5 Fish",
+ "Find Cranky Krabbe",
+ "Scan Lost Lighthouse",
+ "Search Hidden Cove"
+ ];
+ let i=0;
+ setInterval(()=>{
+   i=(i+1)%missions.length;
+   document.getElementById("missionText").textContent=missions[i];
+ },15000);
+});
+</script>
+
+
+<div id="regionHUD" style="position:fixed;right:18px;bottom:120px;z-index:999999;
+background:#0b2238;color:#fff;border:2px solid #5fc8ff;border-radius:12px;padding:10px;font:12px Arial">
+<b>🌍 Region</b><br>
+<span id="regionName">Old Pier</span>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const regions=["Old Pier","Hidden Cove","Punk Dunes","Lost Lighthouse"];
+ let i=0;
+ setInterval(()=>{
+   i=(i+1)%regions.length;
+   document.getElementById("regionName").textContent=regions[i];
+   const feed=document.getElementById("liveFeedText");
+   if(feed) feed.textContent="🌍 Travelling through "+regions[i];
+ },12000);
+
+ window.addEventListener("keydown",(e)=>{
+   const map={ArrowUp:"↑",ArrowDown:"↓",ArrowLeft:"←",ArrowRight:"→",w:"↑",a:"←",s:"↓",d:"→"};
+   if(map[e.key]){
+      const t=document.getElementById("lagoonToast");
+      if(t){
+        t.style.display="block";
+        t.textContent="Walking "+map[e.key];
+        setTimeout(()=>t.style.display="none",700);
+      }
+   }
+ });
+});
+</script>
+
+
+<div id='missionPanel' style='position:fixed;right:12px;bottom:120px;background:#102844;border:2px solid #5fc8ff;color:white;padding:10px;border-radius:14px;z-index:99999'>
+<b>WORLD STATUS</b><br>
+🐟 Fish schools: Active<br>
+🦭 Sven: Wandering<br>
+🐦 Steve: Dynamic AI<br>
+🌊 Tide: Changing
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ let tide=0;
+ setInterval(()=>{
+   tide=(tide+1)%4;
+   const names=['Low Tide','Rising Tide','High Tide','Falling Tide'];
+   const feed=document.getElementById('liveFeedText');
+   if(feed) feed.textContent='🌊 '+names[tide]+' — wildlife reacts.';
+ },15000);
+});
+</script>
+
+<!-- BUILD1134 PATCH -->
+<style>
+#build1134panel{position:fixed;left:14px;bottom:14px;z-index:1000003;
+background:rgba(8,24,38,.92);color:#ffd400;border:2px solid #ffd400;
+padding:10px 14px;border-radius:14px;font:bold 13px Arial}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const p=document.createElement('div');
+ p.id='build1134panel';
+ p.innerHTML='BUILD1134 PREVIEW<br>✔ Dynamic Ecosystem<br>✔ Living NPCs<br>➡ Next: Playable World';
+ document.body.appendChild(p);
+});
+</script>
+
+
+<!-- BUILD1135 PLAYABLE WORLD PATCH -->
+<style>
+#worldStatus{
+position:fixed;right:12px;bottom:12px;z-index:1000004;
+background:rgba(8,24,38,.92);
+color:#8cff8c;border:2px solid #8cff8c;
+padding:10px 14px;border-radius:12px;
+font:700 13px Arial}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const s=document.createElement("div");
+ s.id="worldStatus";
+ s.innerHTML="BUILD1135<br>✔ World Core<br>✔ NPC Scheduler<br>🚧 Playable World Next";
+ document.body.appendChild(s);
+
+ window.HiddenLagoonRoadmap={
+   next:[
+    "Scrollable world",
+    "Playable cat",
+    "Camera follow",
+    "Scanner arrows",
+    "NPC interactions",
+    "Fishing system"
+   ]
+ };
+});
+</script>
+
+
+<style>
+#build1136{position:fixed;left:12px;top:12px;z-index:1000005;background:#07263d;border:2px solid #5cff7a;color:#5cff7a;padding:8px 12px;border-radius:12px;font:bold 13px Arial}
+#worldViewport{position:relative;margin:20px auto;width:95%;height:420px;border:3px solid #5fc8ff;border-radius:18px;overflow:hidden;background:linear-gradient(#67c7ff,#86d9ff 45%,#d8d39b 46%,#78c76e)}
+#worldMap{position:absolute;width:2400px;height:420px;background:linear-gradient(90deg,#8bc34a,#d6c47f,#8bc34a,#6fc3ff,#8bc34a)}
+#playerCat{position:absolute;left:120px;bottom:55px;font-size:42px;transition:left .08s}
+.poi{position:absolute;font-size:36px}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+const home=document.getElementById('explore');
+const vp=document.createElement('div');vp.id='worldViewport';
+vp.innerHTML='<div id="worldMap"><div class="poi" style="left:250px;top:120px">🏚️</div><div class="poi" style="left:800px;top:120px">🌵</div><div class="poi" style="left:1450px;top:120px">🌊</div><div class="poi" style="left:2050px;top:120px">🗼</div><div id="playerCat">🐈</div></div>';
+home.prepend(vp);
+const badge=document.createElement('div');badge.id='build1136';badge.innerHTML='BUILD1137<br>Playable World Prototype';document.body.appendChild(badge);
+let x=120;
+const map=document.getElementById('worldMap');
+const cat=document.getElementById('playerCat');
+addEventListener('keydown',e=>{
+ if(e.key==='ArrowRight'||e.key==='d'){x=Math.min(2280,x+20);}
+ if(e.key==='ArrowLeft'||e.key==='a'){x=Math.max(0,x-20);}
+ cat.style.left=x+'px';
+ let cam=Math.max(0,Math.min(1500,x-300));
+ map.style.transform='translateX('+(-cam)+'px)';
+});
+});
+</script>
+
+<div id="demoRoadmap" style="position:fixed;left:12px;bottom:12px;z-index:999999;
+background:rgba(10,30,40,.92);color:#ffd400;padding:10px 14px;
+border:2px solid #ffd400;border-radius:12px">
+<b>BUILD1138</b><br>
+✓ Demo World Phase 1<br>
+□ Player Controller<br>
+□ Camera System<br>
+□ NPC Interaction
+</div>
+
+
+<div id="build1139badge" style="position:fixed;left:50%;transform:translateX(-50%);
+bottom:12px;z-index:1000000;background:#0b2238;color:#7cff4d;
+border:2px solid #7cff4d;border-radius:14px;padding:10px 18px;font-weight:bold">
+BUILD1139 PREVIEW • Gameplay Phase Started
+</div>
+<script>
+document.addEventListener('keydown',e=>{
+ const t=document.getElementById('lagoonToast');
+ if(!t)return;
+ const m={ArrowUp:'↑ Move North',ArrowDown:'↓ Move South',ArrowLeft:'← Move West',ArrowRight:'→ Move East',
+ w:'↑ Move North',a:'← Move West',s:'↓ Move South',d:'→ Move East'};
+ if(m[e.key]){
+   t.style.display='block';
+   t.textContent='Prototype Controller: '+m[e.key];
+   clearTimeout(window.__toast);
+   window.__toast=setTimeout(()=>t.style.display='none',1200);
+ }
+});
+</script>
+
+
+<div id="build1140badge" style="position:fixed;left:50%;transform:translateX(-50%);
+top:42px;background:#102844;color:#ffd400;border:2px solid #7cff4d;
+padding:8px 14px;border-radius:14px;z-index:1000003;font-weight:bold">
+BUILD1140 • World Gameplay Prototype
+</div>
+<script>
+(function(){
+ const world=document.createElement('div');
+ world.id='worldPlayer';
+ world.textContent='🐱';
+ Object.assign(world.style,{
+ position:'fixed',left:'50%',top:'55%',fontSize:'42px',
+ transform:'translate(-50%,-50%)',zIndex:'999998'
+ });
+ document.body.appendChild(world);
+
+ let x=window.innerWidth/2,y=window.innerHeight*0.55;
+ const keys={};
+ addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+ addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+
+ function loop(){
+   if(keys.w||keys.arrowup)y-=3;
+   if(keys.s||keys.arrowdown)y+=3;
+   if(keys.a||keys.arrowleft)x-=3;
+   if(keys.d||keys.arrowright)x+=3;
+   world.style.left=x+'px';
+   world.style.top=y+'px';
+   requestAnimationFrame(loop);
+ }
+ loop();
+})();
+</script>
+
+
+<div id='worldQuest' style="position:fixed;left:12px;bottom:12px;z-index:1000000;background:#102844;border:2px solid #ffd400;border-radius:12px;padding:10px;color:#fff">
+<b>WORLD QUEST</b><br>
+☐ Find Steve<br>
+☐ Catch 3 Fish<br>
+☐ Visit Hidden Cove
+</div>
+<script>
+(function(){
+let questDone=0;
+window.addEventListener('keydown',e=>{
+ if(e.key.toLowerCase()==='q'){
+   questDone++;
+   document.getElementById('worldQuest').innerHTML='<b>WORLD QUEST</b><br>Progress: '+questDone+'/3';
+ }
+});
+})();
+</script>
+</body>
+</html>
+
+<!-- BUILD1122 -->
+<script>
+window.HIDDEN_LAGOON_BUILD="BUILD1122_WORLD_POLISH";
+console.log("BUILD1122 loaded");
+</script>
